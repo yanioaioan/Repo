@@ -34,10 +34,11 @@ enum rotationAxisFlag
 rotationAxisFlag=y;
 
 glm::mat4 Model = glm::mat4(1);
-glm::mat4 translationMatrix = glm::translate(Model, glm::vec3(0.01,0,0));//glm::mat4(1);
+glm::mat4 translationMatrix = glm::mat4(1);
 glm::mat4 rotationMatrix = glm::mat4(1);
+glm::mat4 scaleMatrix = glm::mat4(1);
 
-
+static bool translate=true;
 
 void renderScene(void)
  {
@@ -64,14 +65,14 @@ void renderScene(void)
   {
       angle = display.m_angleX;
 
-      rotationMatrix = glm::rotate(Model, angle, glm::vec3(1,0,0));
+      rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(1,0,0));//the rotation matrix is multiplied with itself producind a local coordinate rotation
   }
 
   if(display.m_flagLocalY)
   {
      angle = display.m_angleY;
 
-     rotationMatrix = glm::rotate(Model, angle, glm::vec3(0,1,0));
+     rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producind a local coordinate rotation
 
 
   }
@@ -80,12 +81,18 @@ void renderScene(void)
   {
     angle = display.m_angleZ;
 
-    rotationMatrix = glm::rotate(Model, angle, glm::vec3(0,0,1));
+    rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(0,0,1));//the rotation matrix is multiplied with itself producind a local coordinate rotation
   }
 
 
-    Model =  translationMatrix*rotationMatrix;
-//    Model =  rotationMatrix *translationMatrix;
+        translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0.5,0,0));//this represents our global translation
+
+
+
+
+
+    Model =  translationMatrix*rotationMatrix*scaleMatrix;//Often used order. Rotate and place wherever we want
+//    Model =  rotationMatrix *translationMatrix;//Could be used to Rotate around the origin with the radius of translationMatrix
 
 
   //prevent from continues rotation
