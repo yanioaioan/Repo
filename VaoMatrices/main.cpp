@@ -2,10 +2,10 @@
 
 #include "GameModels.h"
 #include<iostream>
-#include<stdio.h>;
-#include<stdlib.h>;
-#include<fstream>;
-#include<vector>;
+#include<stdio.h>
+#include<stdlib.h>
+#include<fstream>
+#include<vector>
 
 #include <iostream>
 #include "display.h"
@@ -34,7 +34,7 @@ enum rotationAxisFlag
 rotationAxisFlag=y;
 
 glm::mat4 Model = glm::mat4(1);
-glm::mat4 translationMatrix = glm::translate(Model, glm::vec3(0.01,0,0));//glm::mat4(1);
+glm::mat4 translationMatrix = glm::translate(Model, glm::vec3(0.001,0,0));//glm::mat4(1);
 glm::mat4 rotationMatrix = glm::mat4(1);
 
 
@@ -84,7 +84,7 @@ void renderScene(void)
   }
 
 
-    Model =  translationMatrix*rotationMatrix;
+    Model =  translationMatrix*rotationMatrix;// right to left evaluation (because of OpenGL Column-Major matrices) ... so at first ROTATE .. and then TRANSLATE ()
 //    Model =  rotationMatrix *translationMatrix;
 
 
