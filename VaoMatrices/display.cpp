@@ -5,6 +5,9 @@
 
 Display::Display(int width,int height,const std::string & title)
 {
+    m_angleX=0;m_angleY=0;m_angleZ=0;
+    m_flagLocalX=false;m_flagLocalY=false;m_flagLocalZ=false;
+
     glEnable(GL_DEPTH_TEST);
 
     SDL_Init(SDL_INIT_EVERYTHING);

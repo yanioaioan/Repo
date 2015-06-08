@@ -2,10 +2,10 @@
 
 #include "GameModels.h"
 #include<iostream>
-#include<stdio.h>;
-#include<stdlib.h>;
-#include<fstream>;
-#include<vector>;
+#include<stdio.h>
+#include<stdlib.h>
+#include<fstream>
+#include<vector>
 
 #include <iostream>
 #include "display.h"
@@ -34,9 +34,10 @@ enum rotationAxisFlag
 rotationAxisFlag=y;
 
 glm::mat4 Model = glm::mat4(1);
-glm::mat4 translationMatrix = glm::mat4(1);
+glm::mat4 translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0,0,0));//glm::mat4(1);
+
 glm::mat4 rotationMatrix = glm::mat4(1);
-glm::mat4 scaleMatrix = glm::mat4(1);
+glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
 
 static bool translate=true;
 
@@ -51,7 +52,8 @@ void renderScene(void)
   glEnable( GL_MULTISAMPLE );
 
 
-  glBindVertexArray(gameModels->GetModel("triangle1"));
+  glBindVertexArray(gameModels->GetModel("plane1"));
+
   glUseProgram(program);
 
   //Load Matrices to Shader START
@@ -65,15 +67,17 @@ void renderScene(void)
   {
       angle = display.m_angleX;
 
-      rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(1,0,0));//the rotation matrix is multiplied with itself producind a local coordinate rotation
+      rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(1,0,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
+      translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0.1,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
+
   }
 
   if(display.m_flagLocalY)
   {
      angle = display.m_angleY;
 
-     rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producind a local coordinate rotation
-
+     rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
+     translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0.1,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
 
   }
 
@@ -81,18 +85,33 @@ void renderScene(void)
   {
     angle = display.m_angleZ;
 
-    rotationMatrix = glm::rotate(rotationMatrix, angle, glm::vec3(0,0,1));//the rotation matrix is multiplied with itself producind a local coordinate rotation
+    rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,0,1));//the rotation matrix is multiplied with itself producing a local coordinate rotation
+    translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0.1,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
+
   }
 
-
-        translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0.5,0,0));//this represents our global translation
-
+//  translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0.5,0,0));//glm::mat4(1);
 
 
+//    Model =  translationMatrix*rotationMatrix;
+//    Model =  rotationMatrix *translationMatrix*scaleMatrix;
 
 
-    Model =  translationMatrix*rotationMatrix*scaleMatrix;//Often used order. Rotate and place wherever we want
-//    Model =  rotationMatrix *translationMatrix;//Could be used to Rotate around the origin with the radius of translationMatrix
+// Right to left evaluation (because of OpenGL Column-Major matrices) ... so at first ROTATE .. and then TRANSLATE ()
+
+    Model =  translationMatrix*rotationMatrix*scaleMatrix;//Often used order. Rotate and place wherever we want locally
+//   Model =  rotationMatrix * translationMatrix * scaleMatrix;//Could be used to Rotate around the origin with the radius of translationMatrix
+
+
+
+
+
+//   Pre- or post-multiplication just defines the order of operations how the member of that matrix and vector are multiplied, its purely a notational convention.
+
+//   The common operations in 3D graphics are post-multiplying a row-vector with column-major matrices (OpenGL) and pre-multiplying a column-vector with row-major matrices (DirectX).
+
+//   Both are basically the same operations with the same results, just the notational convention is different.
+
 
 
   //prevent from continues rotation
@@ -109,7 +128,7 @@ void renderScene(void)
 
   // Camera matrix
   glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,10,-150), // Camera is at (4,3,3), in World Space
+                              glm::vec3(0,20,-450), // Camera is at (4,3,3), in World Space
                               glm::vec3(0,0,0), // and looks at the origin
                               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                               );
@@ -151,10 +170,25 @@ void renderScene(void)
 //    glClearColor(0.0, 0.0, 0.0, 1.0);
 //    glClear(GL_COLOR_BUFFER_BIT);
 
-    glDrawArrays(GL_TRIANGLES, 0, 6);//plane made of 6 vertices
+    glDrawArrays(GL_TRIANGLES, 0, 36);//plane made of 36 vertices (6 planes * 2 triangles * 3 vertices each = 36 vertices passed onto)
 //    display.update();
 //    SDL_Delay(200);
 //  }
+
+
+
+    // Now grab and draw the second Plane (Note this is switching to the new generated VAO)
+
+    //Load Matrices to Shader END
+    glBindVertexArray(gameModels->GetModel("plane2"));
+    glUseProgram(program);
+    glGetUniformLocation(program, "MVP");
+
+    // Send our transformation to the currently bound shader,
+    // in the "MVP" uniform
+    // For each model you render, since the MVP will be different (at least the M part)
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    glDrawArrays(GL_TRIANGLES, 0, 36);//plane made of 6 vertices
 
 
 }
@@ -180,7 +214,8 @@ void Init()
 
     //Enable Vaos & Load
     gameModels = new Models::GameModels(program);
-    gameModels->CreateTriangleModel("triangle1");
+    gameModels->CreatePlaneModel("plane1");
+    gameModels->CreatePlaneModel2("plane2");
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

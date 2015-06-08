@@ -17,8 +17,12 @@ public:
 
     virtual ~Display();
 
-    bool m_flagLocalX=false;bool m_flagLocalY=false;bool m_flagLocalZ=false;
-    int m_angleX=0;int m_angleY=0;int m_angleZ=0;
+    bool m_flagLocalX;
+    bool m_flagLocalY;
+    bool m_flagLocalZ;
+    int m_angleX;
+    int m_angleY;
+    int m_angleZ;
 
 protected:
 
