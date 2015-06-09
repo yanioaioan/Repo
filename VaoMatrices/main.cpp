@@ -175,11 +175,27 @@ void renderScene(void)
 
 //  printVec3(Model2[3][0], Model2[3][1], Model2[3][2])
 
+    // Recompute Up Vector -  Supporting Roll (around Z axis)
     glm::mat4 View = glm::lookAt(
                               glm::vec3(Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400/*0,0,-450*/),
                               glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
                               glm::vec3(newUp) /*glm::vec3(0,1,0)*/  // Head is up (set to 0,-1,0 to look upside-down)
                               );
+
+
+    // Standar Up Vector - Not Supporting Roll (around Z axis) - Camera Tracking the player object
+//    glm::mat4 View = glm::lookAt(
+//                              glm::vec3(/*0,0,-450*/Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400),
+//                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
+//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+//                              );
+
+    // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
+//    glm::mat4 View = glm::lookAt(
+//                              glm::vec3(0,0,-450),
+//                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
+//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+//                              );
 
 //  Our ModelViewProjection : multiplication of our 3 matrices
 //  Model = glm::mat4(1);
@@ -222,7 +238,7 @@ void renderScene(void)
     // in the "MVP" uniform
     // For each model you render, since the MVP will be different (at least the M part)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
-//    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 6 vertices
+    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 6 vertices
     glBindVertexArray(0);
 
 
