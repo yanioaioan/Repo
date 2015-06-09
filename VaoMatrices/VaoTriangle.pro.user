@@ -1,14 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<<<<<<< HEAD
-<!-- Written by QtCreator 3.2.0, 2015-06-08T14:34:05. -->
-=======
-<<<<<<< HEAD
-<!-- Written by QtCreator 3.1.1, 2015-06-05T01:43:21. -->
-=======
-<!-- Written by QtCreator 3.2.0, 2015-06-05T16:12:36. -->
->>>>>>> 5e982de80a1e13fe33b17e51b386e13e20bf21f3
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
+<!-- Written by QtCreator 3.2.0, 2015-06-09T12:24:52. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -132,7 +124,7 @@
     <value type="bool" key="Qt4ProjectManager.Qt4BuildConfiguration.UseShadowBuild">true</value>
    </valuemap>
    <valuemap type="QVariantMap" key="ProjectExplorer.Target.BuildConfiguration.1">
-    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/yioannidis/NGLDemos/VertexArrayObject/SimpleCube/build-VaoTriangle-Clang-Release</value>
+    <value type="QString" key="ProjectExplorer.BuildConfiguration.BuildDirectory">/home/yioannidis/QtStuff/Projects/Repo/VaoMatrices</value>
     <valuemap type="QVariantMap" key="ProjectExplorer.BuildConfiguration.BuildStepList.0">
      <valuemap type="QVariantMap" key="ProjectExplorer.BuildStepList.Step.0">
       <value type="bool" key="ProjectExplorer.BuildStep.Enabled">true</value>
@@ -248,7 +240,7 @@
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.CommandLineArguments"></value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.ProFile">VaoTriangle.pro</value>
     <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseDyldImageSuffix">false</value>
-    <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">true</value>
+    <value type="bool" key="Qt4ProjectManager.Qt4RunConfiguration.UseTerminal">false</value>
     <value type="QString" key="Qt4ProjectManager.Qt4RunConfiguration.UserWorkingDirectory"></value>
     <value type="uint" key="RunConfiguration.QmlDebugServerPort">3768</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>

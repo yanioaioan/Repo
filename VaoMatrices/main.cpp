@@ -15,13 +15,9 @@
 
 //usefull vec3 print command
 #define printVec3(a,b,c) std::cout<<a<<","<<b<<","<<c<<std::endl;
-<<<<<<< HEAD
 
 glm::mat4 matrixFromAxisAngle(glm::vec3 axis, float angle) ;
-float z_rot=0;
 
-=======
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
 
 Models::GameModels* gameModels;
 GLuint program;
@@ -39,40 +35,6 @@ int ScreenWidth=800;int ScreenHeight=600;
 ////setModelViewMatrix( );
 //}
 
-glm::mat4 matrixFromAxisAngle(glm::vec3 axis, float angle) {
-
-   double c = cos(angle);
-   double s = sin(angle);
-   double t = 1.0 - c;
-   //  if axis is not already normalised then uncomment this
-   // double magnitude = Math.sqrt(axis.x*axis.x + axis.y*axis.y + axis.z*axis.z);
-   // if (magnitude==0) throw error;
-   // axis.x /= magnitude;
-   // axis.y /= magnitude;
-   // axis.z /= magnitude;
-
-
-   glm::mat4 tmp;
-
-   tmp[0][0] = c + axis.x*axis.x*t;
-   tmp[1][1] = c + axis.y*axis.y*t;
-   tmp[2][2] = c + axis.z*axis.z*t;
-
-
-   double tmp1 = axis.x*axis.y*t;
-   double tmp2 = axis.z*s;
-   tmp[1][0] = tmp1 + tmp2;
-   tmp[0][1] = tmp1 - tmp2;
-   tmp1 = axis.x*axis.z*t;
-   tmp2 = axis.y*s;
-   tmp[2][0] = tmp1 - tmp2;
-   tmp[0][2] = tmp1 + tmp2;    tmp1 = axis.y*axis.z*t;
-   tmp2 = axis.x*s;
-   tmp[2][1] = tmp1 + tmp2;
-   tmp[1][2] = tmp1 - tmp2;
-
-   return tmp;
-}
 
 
 Display display(ScreenWidth,ScreenHeight,"");
@@ -88,19 +50,14 @@ enum rotationAxisFlag
 rotationAxisFlag=y;
 
 glm::mat4 Model = glm::mat4(1);
-<<<<<<< HEAD
-glm::mat4 Model2 = glm::mat4(1);//used to transform the white cube - representing camera
-=======
 glm::mat4 Model2 = glm::mat4(1);
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
 
 glm::mat4 translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0,0,0));//glm::mat4(1);
-glm::mat4 translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,0));//glm::mat4(1);
+glm::mat4 translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//glm::mat4(1);
 
 glm::mat4 rotationMatrix = glm::mat4(1);
-glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
+glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
 
-glm::mat4 translationMatrix2 =glm::translate(glm::mat4(1), glm::vec3(0,0,-0.5));///used to transform the white cube - representing camera
 
 static bool translate=true;
 static int temp;
@@ -119,7 +76,7 @@ void renderScene(void)
   glEnable(GL_DEPTH_CLAMP);
   glEnable( GL_MULTISAMPLE );
 
-  glBindVertexArray(gameModels->GetModel("plane1"));
+  glBindVertexArray(gameModels->GetModel("cube1"));
 
   glUseProgram(program);
 
@@ -137,13 +94,11 @@ void renderScene(void)
 
       rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(1,0,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
       translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
-<<<<<<< HEAD
-=======
 
-      translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
+      translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-      translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-0.5));//Used to form another Model matrix rotating around the main colored Cube
+//      z_rot=0;
+
   }
 
   if(display.m_flagLocalY)
@@ -152,13 +107,10 @@ void renderScene(void)
 
      rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
      translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
-<<<<<<< HEAD
-=======
 
-     translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
+     translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-     translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-0.5));//Used to form another Model matrix rotating around the main colored Cube
+//     z_rot=0;
   }
 
   if(display.m_flagLocalZ)
@@ -168,192 +120,101 @@ void renderScene(void)
     rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,0,1));//the rotation matrix is multiplied with itself producing a local coordinate rotation
     translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
 
-<<<<<<< HEAD
-    translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-0.5));//Used to form another Model matrix rotating around the main colored Cube
-=======
-    translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));
+    translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-    z_rot+=angle * (M_PI/180.0f);
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
-
+    z_rot+=angle;
   }
 
-//  translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0.5,0,0));//glm::mat4(1);
+    //  translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0.5,0,0));//glm::mat4(1);
 
-//    Model =  translationMatrix*rotationMatrix;
-//    Model =  rotationMatrix *translationMatrix*scaleMatrix;
-
-
-// Right to left evaluation (because of OpenGL Column-Major matrices) ... so at first ROTATE .. and then TRANSLATE ()
-    Model =  translationMatrix*rotationMatrix*scaleMatrix;//Often used order. Rotate and place wherever we want locally
-//   Model =  rotationMatrix * translationMatrix * scaleMatrix;//Could be used to Rotate around the origin with the radius of translationMatrix
+    //  Model =  translationMatrix*rotationMatrix;
+    //  Model =  rotationMatrix *translationMatrix*scaleMatrix;
 
 
-<<<<<<< HEAD
+//      Right to left evaluation (because of OpenGL Column-Major matrices) ... so at first ROTATE .. and then TRANSLATE ()
 
-    Model2 =  rotationMatrix*translationMatrix2*scaleMatrix;//2nd formed Model Matrix
+//      Often used order. Rotate and place wherever we want locally
+        Model =  translationMatrix*rotationMatrix*scaleMatrix;
+//      Could be used to Rotate around the origin with the radius of translationMatrix
+//      Model =  rotationMatrix * translationMatrix * scaleMatrix;
 
-=======
-    Model2 = rotationMatrix*translationMatrix2*scaleMatrix;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
+
+     Model2 = rotationMatrix*translationMatrix2*scaleMatrix;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
 
 
 //   Pre- or post-multiplication just defines the order of operations how the member of that matrix and vector are multiplied, its purely a notational convention.
-
 //   The common operations in 3D graphics are post-multiplying a row-vector with column-major matrices (OpenGL) and pre-multiplying a column-vector with row-major matrices (DirectX).
-
 //   Both are basically the same operations with the same results, just the notational convention is different.
 
 
+//  prevent from continuous rotation
+    display.m_flagLocalX=false;
+    display.m_flagLocalY=false;
+    display.m_flagLocalZ=false;
 
-  //    prevent from continues rotation
-  display.m_flagLocalX=false;
-  display.m_flagLocalY=false;
-  display.m_flagLocalZ=false;
+    glm::mat4 Projection = glm::perspective(glm::radians(45.0f), ScreenWidth / (float)ScreenHeight, 0.5f, 500.f);
 
+//  Camera matrix
+    glm::vec3 newcameraposition(Model2[3][0], Model2[3][1], Model2[3][2]);
+    glm::vec3 target(Model[3][0], Model[3][1], Model[3][2]);
+    glm::vec3 cameraDirection = target-newcameraposition;
+    glm::normalize(cameraDirection);
+    glm::vec4 upVec = glm::vec4(0,1,0,0);
+    glm::vec3 rightVec = glm::cross(glm::vec3(upVec),cameraDirection);
+    glm::normalize(rightVec);
+    newUp= glm::vec4(glm::cross(cameraDirection,rightVec),0);
 
-//  glm::mat4 Projection = gameModels->GetProjectionMatrix();//always the same probably
-//  glm::mat4 View = gameModels->GetViewMatrix();//always the same probably
+    glm::mat4 tmpmat=matrixFromAxisAngle(cameraDirection, -z_rot*(M_PI/180));//to be used for roll only! so, if there's a rotation specified for z it will roll
 
-  glm::mat4 Projection = glm::perspective(glm::radians(45.0f), ScreenWidth / (float)ScreenHeight, 0.5f, 500.f);
+    newUp =  tmpmat*upVec;
 
-<<<<<<< HEAD
+//  printVec3(newcameraposition.x,newcameraposition.y,newcameraposition.z)
 
+//  Model2 = glm::translate(Model, glm::vec3(0,0,-200));
+//  glm::mat4 View = Model2;
 
-      glm::vec4 cameraUp;
-      glm::vec3 cameraTarget,cameraDirection;
-      glm::vec3 newcameraPosiiton = glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]);
+//  printVec3(Model2[3][0], Model2[3][1], Model2[3][2])
 
-      //find new up vector
-      cameraTarget =glm::vec3((Model[3][0], Model[3][1], Model[3][2]));
-      cameraDirection = (newcameraPosiiton - cameraTarget);
-      glm::normalize(cameraDirection);
-      glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-      glm::vec3 cameraRight = glm::vec3(glm::cross(up, cameraDirection));
-      glm::normalize(cameraRight);
-
-      cameraUp =glm::vec4(glm::cross(cameraDirection, cameraRight),1);
-
-
-// Calculate & Store Rotation
-float x_rot = atan2(Model[1][2],Model[2][2]);
-float M_00 = Model[0][0];
-float M_01 = Model[0][1];
-float y_rot = atan2( Model[0][2], sqrt(M_00*M_00 + M_01*M_01) );
-
-// This way, any gimbal lock instability in the value of x_rot is fed back into the extraction process, and will be counteracted in the value computed for z_rot. Note that this method of extracting the 3rd (z) angle makes no assumptions about the other two angles, so that it can be applied in the non-gimbal lock cases too, and no conditional branches are needed
-
-float s1 = sin(x_rot);
-float c1 = cos(x_rot);
-float z_rot = atan2(s1*Model[2][0]-c1*Model[1][0], c1*Model[1][1]-s1*Model[2][1]);
-
-
-glm::mat4 matRot=matrixFromAxisAngle(cameraDirection, z_rot);
-cameraUp=matRot*cameraUp;
-
-printVec3(z_rot,z_rot,z_rot)
-
-//      printVec3(cameraUp.x,cameraUp.y,cameraUp.z);
-
-
-
-glm::mat4 View = glm::lookAt(
-                          glm::vec3(0,20,-450), // Camera is at (4,3,3), in World Space
-                          glm::vec3(0,0,0), // and looks at the origin
-                          glm::vec3(cameraUp)  // Head is up (set to 0,-1,0 to look upside-down)
-                          );
-  // Our ModelViewProjection : multiplication of our 3 matrices
-  // Remember, matrix multiplication works the other way around (<----<----<)
-  glm::mat4 MVP        = Projection * View * Model;
-
-//  View = glm::lookAt(
-//                              glm::vec3(0,20,-450), // Camera is at (4,3,3), in World Space
-//                              glm::vec3(0,0,0), // and looks at the origin
-//                              glm::vec3(0,1,0) //Head is up (set to 0,-1,0 to look upside-down)
-//                              );
-//  Model2=glm::mat4(1);
-  glm::mat4 MVP2        = Projection * View * Model2;
-
-
-
-=======
-
-  // Camera matrix
-
-  glm::vec3 newcameraposition= glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]);
-  glm::vec3 target= glm::vec3(0,0,0);
-  glm::vec3 cameraDirection = target-newcameraposition;
-  glm::normalize(cameraDirection);
-  glm::vec4 upVec = newUp;
-  glm::vec3 rightVec = glm::cross(glm::vec3(upVec),cameraDirection);
-  glm::normalize(rightVec);
-  newUp= glm::vec4(glm::cross(cameraDirection,rightVec),0);
-
-  glm::mat4 tmpmat=matrixFromAxisAngle(cameraDirection, z_rot);//to be used for roll only! so, if there's a rotation specified for z it will roll
-
-  newUp =  tmpmat*upVec;
-
-  printVec3(newcameraposition.x,newcameraposition.y,newcameraposition.z)
-
-  glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,20,-450), // Camera is at (4,3,3), in World Space
-                              glm::vec3(0,0,0), // and looks at the origin
-                              glm::vec3(0,1,0 /*upVec*/)  // Head is up (set to 0,-1,0 to look upside-down)
+    glm::mat4 View = glm::lookAt(
+                              glm::vec3(Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400/*0,0,-450*/),
+                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
+                              glm::vec3(newUp) /*glm::vec3(0,1,0)*/  // Head is up (set to 0,-1,0 to look upside-down)
                               );
 
-// Our ModelViewProjection : multiplication of our 3 matrices
+//  Our ModelViewProjection : multiplication of our 3 matrices
 //  Model = glm::mat4(1);
 //  Model =glm::translate(Model,glm::vec3(0,0,-10));
-  glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication works the other way around (<----<----<)
->>>>>>> 4822a5afce9a03b28eac0fc52c807f3601db8107
 
-  glm::mat4 MVP2       = Projection * View * Model2; // Remember, matrix multiplication works the other way around (<----<----<)
+    glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication works the other way around (<----<----<)
 
-  //reset to origin
-  //  glm::mat4 MVP(1);
+    glm::mat4 MVP2       = Projection * View * Model2; // Remember, matrix multiplication works the other way around (<----<----<)
 
-  // Get a handle for our "MVP" uniform.
-  // Only at initialisation time.
-  GLuint MatrixID = glGetUniformLocation(program, "MVP");
+    //reset to origin
+    //  glm::mat4 MVP(1);
 
-  // Send our transformation to the currently bound shader,
-  // in the "MVP" uniform
-  // For each model you render, since the MVP will be different (at least the M part)
-  glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
-  //Load Matrices to Shader END
+    // Get a handle for our "MVP" uniform.
+    // Only at initialisation time.
+    GLuint MatrixID = glGetUniformLocation(program, "MVP");
 
-//  glm::mat4 Projection = glm::perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.f);
-////  glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -Translate));
-////  glm::mat4 ViewRotateX = glm::rotate(ViewTranslate, Rotate.y, glm::vec3(-1.0f, 0.0f, 0.0f));
-//  glm::mat4 View = glm::lookAt(
-//                    glm::vec3(4,3,3), // Camera is at (4,3,3), in World Space
-//                    glm::vec3(0,0,0), // and looks at the origin
-//                    glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                );
-//  glm::mat4 Model = glm::scale(glm::mat4(1.0f), glm::vec3(0.5f));
-//  glm::mat4 MVP = Projection * View * Model;
-//  GLuint LocationMVP = glGetUniformLocation(program, "MVP");
-//  glUniformMatrix4fv(LocationMVP, 1, GL_FALSE, glm::value_ptr(MVP));
+    // Send our transformation to the currently bound shader,
+    // in the "MVP" uniform
+    // For each model you render, since the MVP will be different (at least the M part)
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+    //Load Matrices to Shader END
 
 
 
-//  for(int i =1;i<=6;i++)
-//  {
-//    /* Make our background black */
-//    glClearColor(0.0, 0.0, 0.0, 1.0);
-//    glClear(GL_COLOR_BUFFER_BIT);
+    // Cube 1 DRAWING
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);//plane made of 36 vertices (6 planes * 2 triangles * 3 vertices each = 36 vertices passed onto)
-//    display.update();
-//    SDL_Delay(200);
-//  }
+    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices (6 planes * 2 triangles * 3 vertices each = 36 vertices passed onto)
+    glBindVertexArray(0);
 
+    //  Cube 2 DRAWING
 
-
-    // Now grab and draw the second Plane (Note this is switching to the new generated VAO)
+    // Now grab and draw the second cube (Note this is switching to the new generated VAO)
 
     //Load Matrices to Shader END
-    glBindVertexArray(gameModels->GetModel("plane2"));
+    glBindVertexArray(gameModels->GetModel("cube2"));
     glUseProgram(program);
     glGetUniformLocation(program, "MVP");
 
@@ -361,11 +222,43 @@ glm::mat4 View = glm::lookAt(
     // in the "MVP" uniform
     // For each model you render, since the MVP will be different (at least the M part)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
-    glDrawArrays(GL_TRIANGLES, 0, 36);//plane made of 6 vertices
+//    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 6 vertices
+    glBindVertexArray(0);
+
+
+//    GRID DRAWING
+
+    glBindVertexArray(gameModels->GetModel("Grid"));
+    glUseProgram(program);
+    glGetUniformLocation(program, "MVP");
+
+    // Send our transformation to the currently bound shader,
+    // in the "MVP" uniform
+    // For each model you render, since the MVP will be different (at least the M part)
+    Model = glm::mat4(1);
+
+    MVP        = Projection * View * Model;
+    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+
+    glDrawArrays(GL_LINE_STRIP, 0, 101*101);//draw grid
+
+    glBindVertexArray(0);
+
+
+//     Draw a grid in immediate mode "quickly"!
+//     glBegin(GL_LINES);
+//     for (GLfloat i = -10; i <= 10; i += 1) {
+//       glVertex3f(i, 0, 10); glVertex3f(i, 0, -10);
+//       glVertex3f(10, 0, i); glVertex3f(-10, 0, i);
+//     }
+//     glEnd();
+
 }
 
 void Init()
 {
+
     //Trivial SDL initializations
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -383,8 +276,10 @@ void Init()
 
     //Enable Vaos & Load
     gameModels = new Models::GameModels(program);
-    gameModels->CreatePlaneModel("plane1");
-    gameModels->CreatePlaneModel2("plane2");
+    gameModels->CreateCubeModel("cube1");
+    gameModels->CreateCubeModel2("cube2");
+    gameModels->CreateGrid("Grid");
+
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 

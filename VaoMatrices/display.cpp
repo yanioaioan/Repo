@@ -80,12 +80,12 @@ void Display::update()
 
         if(e.key.keysym.sym==SDLK_LEFT)
         {
-            m_angleY=1;
+            m_angleY=-1;
             m_flagLocalY=true;
         }
         if(e.key.keysym.sym==SDLK_RIGHT)
         {
-            m_angleY=-1;
+            m_angleY=1;
             m_flagLocalY=true;
         }
 

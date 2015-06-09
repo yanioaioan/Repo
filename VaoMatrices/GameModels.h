@@ -23,8 +23,10 @@ namespace Models
          GameModels(GLuint shaderProgramId);
         ~GameModels();
 
-         void CreatePlaneModel(const std::string& gameModelName);
-         void CreatePlaneModel2(const std::string& gameModelName);
+         void CreateCubeModel(const std::string& gameModelName);
+         void CreateCubeModel2(const std::string& gameModelName);
+         void CreateGrid(const std::string& gameModelName)
+;
 
          void DeleteModel(const std::string& gameModelName);
          unsigned int GetModel(const std::string& gameModelName);
