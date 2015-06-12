@@ -17,6 +17,15 @@ namespace Models
        Model(){}
     };
 
+
+    //Move here so as to be accessed using the scope resolution operator
+    struct point {
+      GLfloat x;
+      GLfloat y;
+      GLfloat z;
+    };
+
+
     class GameModels
     {
        public:
@@ -25,8 +34,10 @@ namespace Models
 
          void CreateCubeModel(const std::string& gameModelName);
          void CreateCubeModel2(const std::string& gameModelName);
-         void CreateGrid(const std::string& gameModelName)
-;
+         void CreateGrid(const std::string& gameModelName);
+
+         void createVBOgrid(const std::string &gameModelName);
+
 
          void DeleteModel(const std::string& gameModelName);
          unsigned int GetModel(const std::string& gameModelName);
@@ -53,9 +64,17 @@ namespace Models
          glm::mat4 GetProjectionMatrix(){return projectionMatrix; }
 
 
+         // Shader variable positions
+         GLint posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or 'zero' instead of retrieving the reference to the attribute "position input"
+         GLint colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or 'one' instead of retrieving the reference to the attribute "position input"
+
+         // The VBO of the grid declared globally so as to be accessed by the main class
+         unsigned int Gridvbo;
+
+         GLuint m_shaderProgramId;
       private:
         std::map<std::string, Model> GameModelList;//keep our models
-        GLuint m_shaderProgramId;
+
         glm::vec3 position;
         glm::vec3 rotation;
         glm::vec3 scale;
@@ -65,6 +84,9 @@ namespace Models
         //private copy constructor & assignment operator
         GameModels (const GameModels & other){}
         GameModels& operator = (const GameModels & other){}
+
+
+
     };
 
 }

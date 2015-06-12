@@ -97,7 +97,6 @@ void renderScene(void)
 
       translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-//      z_rot=0;
 
   }
 
@@ -110,7 +109,6 @@ void renderScene(void)
 
      translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-//     z_rot=0;
   }
 
   if(display.m_flagLocalZ)
@@ -122,6 +120,7 @@ void renderScene(void)
 
     translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
+    // Roll section
     z_rot+=angle;
   }
 
@@ -238,11 +237,18 @@ void renderScene(void)
     // in the "MVP" uniform
     // For each model you render, since the MVP will be different (at least the M part)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
-    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 6 vertices
+    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices
     glBindVertexArray(0);
 
 
+
 //    GRID DRAWING
+
+//    glLineWidth((GLfloat)2.5f);
+
+
+
+
 
     glBindVertexArray(gameModels->GetModel("Grid"));
     glUseProgram(program);
@@ -257,8 +263,39 @@ void renderScene(void)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 
-    glDrawArrays(GL_LINE_STRIP, 0, 101*101);//draw grid
+//    glDrawArrays(GL_LINES, 0, 3200 );//draw grid
 
+
+    /////////////////////////////
+    glBindBuffer(GL_ARRAY_BUFFER,gameModels->Gridvbo);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+    //Set Uniform color for the grid
+    GLuint colorUniformAttr = glGetUniformLocation(gameModels->m_shaderProgramId, "mycolor");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    GLfloat uniformColor[] = { 0.3f, 0.2f, 0.25f, 1.0f};
+    glUniform4fv(colorUniformAttr, 1, uniformColor);
+
+    //Draw Horizontal Lines
+    for(int i = 0; i < 101; i++)
+    {
+      glDrawArrays(GL_LINE_STRIP, 101 * i, 101);
+//    That works, although we did make 101 OpenGL calls,
+//    which is not so much, but one would rather avoid doing that.
+//    We also need to draw vertical lines, but the vertices are not in the right order!
+//    Although, in this case, we can cheat by using the stride and pointer parameters:
+    }
+
+    //Draw Vertical Lines
+    for(int i = 0; i < 101; i++) {
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 101 * sizeof(Models::point), (void *)(i * sizeof(Models::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
+      glDrawArrays(GL_LINE_STRIP, 0, 101);
+    }
+    /////////////////////////////
+
+
+    uniformColor[0] = 0;
+
+    // Unbind VAO of the grid
     glBindVertexArray(0);
 
 
@@ -295,6 +332,7 @@ void Init()
     gameModels->CreateCubeModel("cube1");
     gameModels->CreateCubeModel2("cube2");
     gameModels->CreateGrid("Grid");
+//    gameModels->createVBOgrid("VBOGrid");
 
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -375,5 +413,18 @@ int main(int argc, char **argv)
  glDeleteProgram(program);
 
  return 0;
+
+
+
+//    unsigned char arr[10] = {547643754884864,43,46,4,5,76,43,34,57,193};
+
+//    std::cout<< "Array" <<std::endl;
+
+//    for(unsigned i=0; i<10; ++i)
+//        std::cout<< arr[i] << " ";
+
+//    std::cout<<std::endl;
+
+
 
 }
