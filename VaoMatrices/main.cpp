@@ -57,6 +57,8 @@ glm::mat4 translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));/
 
 glm::mat4 rotationMatrix = glm::mat4(1);
 glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
+glm::mat4 scaleMatrix2 = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
+
 
 
 static bool translate=true;
@@ -138,7 +140,8 @@ void renderScene(void)
 //      Model =  rotationMatrix * translationMatrix * scaleMatrix;
 
 
-     Model2 = rotationMatrix*translationMatrix2*scaleMatrix;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
+     //glm::mat4 rotationMatrix2 = glm::rotate(rotationMatrix, 45.0f ,glm::vec3(1,0,0));
+     Model2 =  rotationMatrix*translationMatrix2*scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
 
 
 //   Pre- or post-multiplication just defines the order of operations how the member of that matrix and vector are multiplied, its purely a notational convention.
@@ -196,15 +199,13 @@ void renderScene(void)
 //                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
 //                              );
 
-//  Our ModelViewProjection : multiplication of our 3 matrices
-//  Model = glm::mat4(1);
-//  Model =glm::translate(Model,glm::vec3(0,0,-10));
+
 
     glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication works the other way around (<----<----<)
 
     glm::mat4 MVP2       = Projection * View * Model2; // Remember, matrix multiplication works the other way around (<----<----<)
 
-    //reset to origin
+    //  reset to origin
     //  glm::mat4 MVP(1);
 
     // Get a handle for our "MVP" uniform.
@@ -244,11 +245,7 @@ void renderScene(void)
 
 //    GRID DRAWING
 
-//    glLineWidth((GLfloat)2.5f);
-
-
-
-
+    glLineWidth((GLfloat)2.5f);
 
     glBindVertexArray(gameModels->GetModel("Grid"));
     glUseProgram(program);
@@ -275,35 +272,40 @@ void renderScene(void)
     GLfloat uniformColor[] = { 0.3f, 0.2f, 0.25f, 1.0f};
     glUniform4fv(colorUniformAttr, 1, uniformColor);
 
+
+
     //Draw Horizontal Lines
-    for(int i = 0; i < 101; i++)
+    for(int i = 0; i < 50; i++)
     {
-      glDrawArrays(GL_LINE_STRIP, 101 * i, 101);
-//    That works, although we did make 101 OpenGL calls,
+      glDrawArrays(GL_LINE_STRIP, 50*i, 50);
+//    That works, although we did make 50 OpenGL calls,
 //    which is not so much, but one would rather avoid doing that.
 //    We also need to draw vertical lines, but the vertices are not in the right order!
 //    Although, in this case, we can cheat by using the stride and pointer parameters:
     }
 
+
+    //Cheating using stride to draw vertical lines
     //Draw Vertical Lines
-    for(int i = 0; i < 101; i++) {
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 101 * sizeof(Models::point), (void *)(i * sizeof(Models::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
-      glDrawArrays(GL_LINE_STRIP, 0, 101);
+    for(int i = 0; i < 50; i++) {
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 50 * sizeof(Models::point), (void *)(2 * sizeof(Models::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
+      glDrawArrays(GL_LINE_STRIP, 0, 50);
     }
     /////////////////////////////
 
 
-    uniformColor[0] = 0;
+    uniformColor[0] = 0;uniformColor[1] = 0;uniformColor[2] = 0;uniformColor[3] = 0;//reset uniform color values to 0 and ..
+    glUniform4fv(colorUniformAttr, 1, uniformColor);//pass uniform color to shader when we are finished with drawing the grid
 
     // Unbind VAO of the grid
     glBindVertexArray(0);
 
 
-//     Draw a grid in immediate mode "quickly"!
+//     Draw a grid in immediate mode "quickly" (if wanted)!
 //     glBegin(GL_LINES);
-//     for (GLfloat i = -10; i <= 10; i += 1) {
-//       glVertex3f(i, 0, 10); glVertex3f(i, 0, -10);
-//       glVertex3f(10, 0, i); glVertex3f(-10, 0, i);
+//     for (GLfloat i = -100; i <= 100; i += 1) {
+//       glVertex3f(i, 0, 100); glVertex3f(i, 0, -100);
+//       glVertex3f(100, 0, i); glVertex3f(-100, 0, i);
 //     }
 //     glEnd();
 

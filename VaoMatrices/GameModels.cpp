@@ -274,25 +274,26 @@ GameModelList[gameModelName] = myModel;  //add to std::map
 
 void GameModels::CreateGrid(const std::string& gameModelName)
 {
-    struct point {
-      GLfloat x;
-      GLfloat y;
-      GLfloat z;
+    struct point
+    {
+        GLfloat x;
+        GLfloat y;
+        GLfloat z;
     };
 
-    point vertices[101][101];
+    point vertices[50][50];
 
-    for(int i = 0; i < 101; i++)
+    for(int i = 0; i < 50; i++)
     {
-      for(int j = 0; j < 101; j++)
-      {
-        vertices[i][j].x = -5+j/10.0;
-        vertices[i][j].y = 0;
-        vertices[i][j].z = i/2.0;
+        for(int j = 0; j < 50; j++)
+            {
+                vertices[i][j].x = -5+j/2;
+                vertices[i][j].y = 0;
+                vertices[i][j].z = i/2.0;
 
-
-      }
+            }
     }
+
 
     unsigned int vao;
 //    unsigned int Gridvbo,vbo2;
@@ -305,25 +306,6 @@ void GameModels::CreateGrid(const std::string& gameModelName)
 
     glBufferData(GL_ARRAY_BUFFER,  sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
     glEnableVertexAttribArray(0);
-
-//    posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or 'zero' instead of retrieving the reference to the attribute "position input"
-
-//    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
-
-
-//    glGenVertexArrays(1, &vao);
-//    glBindVertexArray(vao);
-
-//    glGenBuffers(1, &vbo2);
-//    glBindBuffer(GL_ARRAY_BUFFER,vbo2);
-//    glBufferData(GL_ARRAY_BUFFER,  sizeof(point)* (101*101), &vertices2[0], GL_STATIC_DRAW);
-//    glEnableVertexAttribArray(0);
-
-//    posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or 'zero' instead of retrieving the reference to the attribute "position input"
-
-//    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, 0, (void*)0);
-
 
 
     Model myModel;                            //is allocated on Stack
