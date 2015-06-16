@@ -288,7 +288,7 @@ void renderScene(void)
     //Cheating using stride to draw vertical lines
     //Draw Vertical Lines
     for(int i = 0; i < 50; i++) {
-      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 50 * sizeof(Models::point), (void *)(2 * sizeof(Models::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
+      glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 50 * sizeof(Models::point), (void *)(i * sizeof(Models::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
       glDrawArrays(GL_LINE_STRIP, 0, 50);
     }
     /////////////////////////////
