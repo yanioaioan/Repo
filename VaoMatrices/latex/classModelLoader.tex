@@ -1,0 +1,142 @@
+\hypertarget{classModelLoader}{
+\section{ModelLoader Class Reference}
+\label{classModelLoader}\index{ModelLoader@{ModelLoader}}
+}
+Inheritance diagram for ModelLoader::\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2cm]{classModelLoader}
+\end{center}
+\end{figure}
+\subsection*{Classes}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structModelLoader_1_1Model}{Model}
+\item 
+struct \hyperlink{structModelLoader_1_1point}{point}
+\end{DoxyCompactItemize}
+\subsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classModelLoader_ac14dc611ee3ec0f7a20294ea9509fb10}{
+void {\bfseries CreateCubeModel} (const std::string \&gameModelName)}
+\label{classModelLoader_ac14dc611ee3ec0f7a20294ea9509fb10}
+
+\item 
+\hypertarget{classModelLoader_a86c83b98085243935a6a0de0785c7512}{
+void {\bfseries CreateCubeModel2} (const std::string \&gameModelName)}
+\label{classModelLoader_a86c83b98085243935a6a0de0785c7512}
+
+\item 
+\hypertarget{classModelLoader_ae45b20a6326655a86b61c43a8bec2d17}{
+void {\bfseries CreateGrid} (const std::string \&gameModelName)}
+\label{classModelLoader_ae45b20a6326655a86b61c43a8bec2d17}
+
+\item 
+\hypertarget{classModelLoader_ae807caa16c2e2b1c87eeebb344ba7ebb}{
+void {\bfseries createVBOgrid} (const std::string \&gameModelName)}
+\label{classModelLoader_ae807caa16c2e2b1c87eeebb344ba7ebb}
+
+\item 
+\hypertarget{classModelLoader_aa85f00738360bfc64f31f2e11c4efc58}{
+void {\bfseries DeleteModel} (const std::string \&gameModelName)}
+\label{classModelLoader_aa85f00738360bfc64f31f2e11c4efc58}
+
+\item 
+\hypertarget{classModelLoader_a1e37e94c952b4157ff071146bfee927a}{
+unsigned int {\bfseries GetModel} (const std::string \&gameModelName)}
+\label{classModelLoader_a1e37e94c952b4157ff071146bfee927a}
+
+\item 
+\hypertarget{classModelLoader_a522ddc775b7b60f89bc36242e806cbf0}{
+glm::vec3 {\bfseries GetPosition} ()}
+\label{classModelLoader_a522ddc775b7b60f89bc36242e806cbf0}
+
+\item 
+\hypertarget{classModelLoader_ab57ba52335d4efd8b55d843d3801ca3c}{
+void {\bfseries SetPosition} (glm::vec3 \_\-position)}
+\label{classModelLoader_ab57ba52335d4efd8b55d843d3801ca3c}
+
+\item 
+\hypertarget{classModelLoader_a5bf2312dc46e142f1877739dfcc756e8}{
+glm::vec3 {\bfseries GetRotation} ()}
+\label{classModelLoader_a5bf2312dc46e142f1877739dfcc756e8}
+
+\item 
+\hypertarget{classModelLoader_a428ef884d300bc2b2d0706ad5b4198ca}{
+void {\bfseries SetRotation} (glm::vec3 \_\-rotation)}
+\label{classModelLoader_a428ef884d300bc2b2d0706ad5b4198ca}
+
+\item 
+\hypertarget{classModelLoader_afc0ecdf73f6c85752c9a690e38599b34}{
+glm::vec3 {\bfseries GetScale} ()}
+\label{classModelLoader_afc0ecdf73f6c85752c9a690e38599b34}
+
+\item 
+\hypertarget{classModelLoader_a96793c518f235d03349f642ad0aaebc1}{
+void {\bfseries SetScale} (glm::vec3 \_\-scale)}
+\label{classModelLoader_a96793c518f235d03349f642ad0aaebc1}
+
+\item 
+\hypertarget{classModelLoader_a50486cfb738a0f1431b8de2dad3f00ff}{
+void {\bfseries SetViewMatrix} (glm::mat4 \_\-viewMatrix)}
+\label{classModelLoader_a50486cfb738a0f1431b8de2dad3f00ff}
+
+\item 
+\hypertarget{classModelLoader_a9d3d71a699f08533e95a8af4530eaa04}{
+glm::mat4 {\bfseries GetViewMatrix} ()}
+\label{classModelLoader_a9d3d71a699f08533e95a8af4530eaa04}
+
+\item 
+\hypertarget{classModelLoader_a5a7bcbfb9d6c71c1ea58b150be4b991c}{
+void {\bfseries SetProjectionMatrix} (glm::mat4 \_\-projectionMatrix)}
+\label{classModelLoader_a5a7bcbfb9d6c71c1ea58b150be4b991c}
+
+\item 
+\hypertarget{classModelLoader_aa4f1ba034a863e7f9ca8628360e2384a}{
+glm::mat4 {\bfseries GetProjectionMatrix} ()}
+\label{classModelLoader_aa4f1ba034a863e7f9ca8628360e2384a}
+
+\end{DoxyCompactItemize}
+\subsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classModelLoader_aa3eb17f659b30e28874112f08f676e18}{
+GLint {\bfseries posAttrib} = glGetAttribLocation(m\_\-shaderProgramId, \char`\"{}in\_\-position\char`\"{})}
+\label{classModelLoader_aa3eb17f659b30e28874112f08f676e18}
+
+\item 
+\hypertarget{classModelLoader_a52a0d4556d91017494e44259692c48d3}{
+GLint {\bfseries colAttrib} = glGetAttribLocation(m\_\-shaderProgramId, \char`\"{}in\_\-color\char`\"{})}
+\label{classModelLoader_a52a0d4556d91017494e44259692c48d3}
+
+\item 
+\hypertarget{classModelLoader_aada21d4b482693f92d503a9beab03abb}{
+GLint {\bfseries texAttrib} = glGetAttribLocation(m\_\-shaderProgramId, \char`\"{}in\_\-uv\char`\"{})}
+\label{classModelLoader_aada21d4b482693f92d503a9beab03abb}
+
+\item 
+\hypertarget{classModelLoader_a590d418ab85aa4654ef94b25eada91d0}{
+unsigned int {\bfseries Gridvbo}}
+\label{classModelLoader_a590d418ab85aa4654ef94b25eada91d0}
+
+\item 
+\hypertarget{classModelLoader_a494e2a0ce1c438005a78611fedeca593}{
+GLuint {\bfseries m\_\-shaderProgramId}}
+\label{classModelLoader_a494e2a0ce1c438005a78611fedeca593}
+
+\end{DoxyCompactItemize}
+\subsection*{Friends}
+\begin{DoxyCompactItemize}
+\item 
+\hypertarget{classModelLoader_af3bfa18f3438adae73421a11b6401066}{
+class \hyperlink{classModelLoader_af3bfa18f3438adae73421a11b6401066}{Singleton$<$ ModelLoader $>$}}
+\label{classModelLoader_af3bfa18f3438adae73421a11b6401066}
+
+\end{DoxyCompactItemize}
+
+
+The documentation for this class was generated from the following files:\begin{DoxyCompactItemize}
+\item 
+ModelLoader.h\item 
+ModelLoader.cpp\end{DoxyCompactItemize}

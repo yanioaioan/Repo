@@ -4,9 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core
-
-QT       -= gui opengl core
+QT       += core gui opengl
 
 TARGET = VaoTriangle
 CONFIG   += console
@@ -15,20 +13,25 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += main.cpp \
-    GameModels.cpp \
-    display.cpp \
-    shader.cpp
+SOURCES += src/main.cpp \
+    src/display.cpp \
+    src/shader.cpp \
+    src/singleton.cpp \
+    src/ModelLoader.cpp
 
 
-OTHER_FILES+= $$PWD/shaders/* \
-    shaders/shader.fs
+HEADERS += \
+    include/Vertexformat.h \
+    include/display.h \
+    include/shader.h \
+    include/singleton.h \
+    include/ModelLoader.h
+
+INCLUDEPATH +=$$PWD/include
+
+OTHER_FILES+= $$PWD/shaders/*
+
+OBJECTS_DIR=obj
 
 LIBS += -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW
 LIBS +=  -lGLU -lGL
-
-HEADERS += \
-    Vertexformat.h \
-    GameModels.h \
-    display.h \
-    shader.h

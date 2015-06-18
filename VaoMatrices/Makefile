@@ -12,13 +12,13 @@ MAKEFILE      = Makefile
 
 CC            = clang
 CXX           = clang++
-DEFINES       = 
+DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/opt/Qt/5.3/gcc_64/mkspecs/linux-clang -I.
+INCPATH       = -I/opt/Qt/5.3/gcc_64/mkspecs/linux-clang -I. -Iinclude -I/opt/Qt/5.3/gcc_64/include -I/opt/Qt/5.3/gcc_64/include/QtOpenGL -I/opt/Qt/5.3/gcc_64/include/QtWidgets -I/opt/Qt/5.3/gcc_64/include/QtGui -I/opt/Qt/5.3/gcc_64/include/QtCore -I.
 LINK          = clang++
-LFLAGS        = -ccc-gcc-name g++ -Wl,-rpath,/opt/Qt/5.3/gcc_64
-LIBS          = $(SUBLIBS) -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW -lGLU -lGL -lpthread 
+LFLAGS        = -ccc-gcc-name g++ -Wl,-rpath,/opt/Qt/5.3/gcc_64 -Wl,-rpath,/opt/Qt/5.3/gcc_64/lib
+LIBS          = $(SUBLIBS) -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW -lGLU -L/opt/Qt/5.3/gcc_64/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /opt/Qt/5.3/gcc_64/bin/qmake
@@ -41,18 +41,20 @@ MKDIR         = mkdir -p
 
 ####### Output directory
 
-OBJECTS_DIR   = ./
+OBJECTS_DIR   = obj/
 
 ####### Files
 
-SOURCES       = main.cpp \
-		GameModels.cpp \
-		display.cpp \
-		shader.cpp 
-OBJECTS       = main.o \
-		GameModels.o \
-		display.o \
-		shader.o
+SOURCES       = src/main.cpp \
+		src/display.cpp \
+		src/shader.cpp \
+		src/singleton.cpp \
+		src/ModelLoader.cpp 
+OBJECTS       = obj/main.o \
+		obj/display.o \
+		obj/shader.o \
+		obj/singleton.o \
+		obj/ModelLoader.o
 DIST          = /opt/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		/opt/Qt/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -150,15 +152,20 @@ DIST          = /opt/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/qt.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/resources.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/moc.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/uic.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
-		VaoTriangle.pro main.cpp \
-		GameModels.cpp \
-		display.cpp \
-		shader.cpp
+		VaoTriangle.pro src/main.cpp \
+		src/display.cpp \
+		src/shader.cpp \
+		src/singleton.cpp \
+		src/ModelLoader.cpp
 QMAKE_TARGET  = VaoTriangle
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = VaoTriangle
@@ -288,12 +295,20 @@ Makefile: VaoTriangle.pro /opt/Qt/5.3/gcc_64/mkspecs/linux-clang/qmake.conf /opt
 		/opt/Qt/5.3/gcc_64/mkspecs/features/default_post.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/qt.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/resources.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/moc.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf \
+		/opt/Qt/5.3/gcc_64/mkspecs/features/uic.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/yacc.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/features/lex.prf \
-		VaoTriangle.pro
+		VaoTriangle.pro \
+		/opt/Qt/5.3/gcc_64/lib/libQt5OpenGL.prl \
+		/opt/Qt/5.3/gcc_64/lib/libQt5Widgets.prl \
+		/opt/Qt/5.3/gcc_64/lib/libQt5Gui.prl \
+		/opt/Qt/5.3/gcc_64/lib/libQt5Core.prl
 	$(QMAKE) -spec linux-clang CONFIG+=debug -o Makefile VaoTriangle.pro
 /opt/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf:
@@ -392,20 +407,28 @@ Makefile: VaoTriangle.pro /opt/Qt/5.3/gcc_64/mkspecs/linux-clang/qmake.conf /opt
 /opt/Qt/5.3/gcc_64/mkspecs/features/default_post.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/warn_on.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/qt.prf:
+/opt/Qt/5.3/gcc_64/mkspecs/features/resources.prf:
+/opt/Qt/5.3/gcc_64/mkspecs/features/moc.prf:
+/opt/Qt/5.3/gcc_64/mkspecs/features/unix/opengl.prf:
+/opt/Qt/5.3/gcc_64/mkspecs/features/uic.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/unix/thread.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/testcase_targets.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/exceptions.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/yacc.prf:
 /opt/Qt/5.3/gcc_64/mkspecs/features/lex.prf:
 VaoTriangle.pro:
+/opt/Qt/5.3/gcc_64/lib/libQt5OpenGL.prl:
+/opt/Qt/5.3/gcc_64/lib/libQt5Widgets.prl:
+/opt/Qt/5.3/gcc_64/lib/libQt5Gui.prl:
+/opt/Qt/5.3/gcc_64/lib/libQt5Core.prl:
 qmake: FORCE
 	@$(QMAKE) -spec linux-clang CONFIG+=debug -o Makefile VaoTriangle.pro
 
 qmake_all: FORCE
 
 dist: 
-	@test -d .tmp/VaoTriangle1.0.0 || mkdir -p .tmp/VaoTriangle1.0.0
-	$(COPY_FILE) --parents $(DIST) .tmp/VaoTriangle1.0.0/ && (cd `dirname .tmp/VaoTriangle1.0.0` && $(TAR) VaoTriangle1.0.0.tar VaoTriangle1.0.0 && $(COMPRESS) VaoTriangle1.0.0.tar) && $(MOVE) `dirname .tmp/VaoTriangle1.0.0`/VaoTriangle1.0.0.tar.gz . && $(DEL_FILE) -r .tmp/VaoTriangle1.0.0
+	@test -d obj/VaoTriangle1.0.0 || mkdir -p obj/VaoTriangle1.0.0
+	$(COPY_FILE) --parents $(DIST) obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents include/Vertexformat.h include/display.h include/shader.h include/singleton.h include/ModelLoader.h obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents src/main.cpp src/display.cpp src/shader.cpp src/singleton.cpp src/ModelLoader.cpp obj/VaoTriangle1.0.0/ && (cd `dirname obj/VaoTriangle1.0.0` && $(TAR) VaoTriangle1.0.0.tar VaoTriangle1.0.0 && $(COMPRESS) VaoTriangle1.0.0.tar) && $(MOVE) `dirname obj/VaoTriangle1.0.0`/VaoTriangle1.0.0.tar.gz . && $(DEL_FILE) -r obj/VaoTriangle1.0.0
 
 
 clean:compiler_clean 
@@ -420,8 +443,20 @@ distclean: clean
 
 ####### Sub-libraries
 
+mocclean: compiler_moc_header_clean compiler_moc_source_clean
+
+mocables: compiler_moc_header_make_all compiler_moc_source_make_all
+
 check: first
 
+compiler_rcc_make_all:
+compiler_rcc_clean:
+compiler_moc_header_make_all:
+compiler_moc_header_clean:
+compiler_moc_source_make_all:
+compiler_moc_source_clean:
+compiler_uic_make_all:
+compiler_uic_clean:
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
 compiler_yacc_impl_make_all:
@@ -432,21 +467,162 @@ compiler_clean:
 
 ####### Compile
 
-main.o: main.cpp GameModels.h \
-		Vertexformat.h \
-		display.h \
-		shader.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o main.o main.cpp
+obj/main.o: src/main.cpp include/ModelLoader.h \
+		include/Vertexformat.h \
+		include/singleton.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/QMutexLocker \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/QTime \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdatetime.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		include/display.h \
+		include/shader.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/QImage \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o src/main.cpp
 
-GameModels.o: GameModels.cpp GameModels.h \
-		Vertexformat.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o GameModels.o GameModels.cpp
+obj/display.o: src/display.cpp include/display.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/display.o src/display.cpp
 
-display.o: display.cpp display.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o display.o display.cpp
+obj/shader.o: src/shader.cpp include/shader.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/shader.o src/shader.cpp
 
-shader.o: shader.cpp shader.h
-	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o shader.o shader.cpp
+obj/singleton.o: src/singleton.cpp include/singleton.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/QMutexLocker \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/singleton.o src/singleton.cpp
+
+obj/ModelLoader.o: src/ModelLoader.cpp include/ModelLoader.h \
+		include/Vertexformat.h \
+		include/singleton.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/QMutexLocker \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobal.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qconfig.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfeatures.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsystemdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qprocessordetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcompilerdetection.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypeinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtypetraits.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsysinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlogging.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qflags.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qbasicatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_bootstrap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qgenericatomic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_msvc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv7.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv6.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_armv5.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_ia64.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_mips.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_x86.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_cxx11.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/ModelLoader.o src/ModelLoader.cpp
 
 ####### Install
 
