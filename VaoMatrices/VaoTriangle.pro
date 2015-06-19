@@ -28,6 +28,7 @@ HEADERS += \
     include/ModelLoader.h
 
 INCLUDEPATH +=$$PWD/include
+MOC_DIR=moc
 
 OTHER_FILES+= $$PWD/shaders/*
 

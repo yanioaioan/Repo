@@ -15,5 +15,4 @@ void main()
   vec4 v = vec4(in_position, 1);
   gl_Position = MVP * v;
   uvVert = in_uv;
-
 }
