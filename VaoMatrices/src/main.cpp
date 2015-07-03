@@ -13,16 +13,21 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp> // glm::value_ptr
 
+
+#include <ngl/VertexArrayObject.h>
+
+
 //usefull vec3 print command
 #define printVec3(a,b,c) std::cout<<a<<","<<b<<","<<c<<std::endl;
 
 glm::mat4 matrixFromAxisAngle(glm::vec3 axis, float angle);
-void loadTexture();
+void loadTexture(const char *texturePath);
 void unLoadTexture();
 
 ModelLoader* m;
 GLuint program;
-GLuint m_textureName;
+GLuint m_textureNamesArray[2];
+short loaderTexturesCounter=0;
 int ScreenWidth=800;int ScreenHeight=600;
 int m_Frames = 0;
 //void roll( float angle, glm::vec3 upvector )
@@ -37,6 +42,14 @@ int m_Frames = 0;
 ////setModelViewMatrix( );
 //}
 
+
+struct Light {
+    glm::vec3 position;
+    glm::vec3 intensities; //a.k.a. the color of the light
+    float ambientCoefficient;
+};
+
+Light gLight;
 
 
 Display display(ScreenWidth,ScreenHeight,"Vao Model Loading & Modern Opengl (Matrices Shaders)- (using SDL for window & opengl context handling)");
@@ -62,7 +75,6 @@ glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
 glm::mat4 scaleMatrix2 = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
 
 
-
 static bool translate=true;
 static int temp;
 
@@ -70,11 +82,15 @@ glm::vec4 newUp(0,1,0,0);
 
 static float z_rot;
 
+
+
+ngl::VertexArrayObject *m_vaoMesh;
+
 void renderScene(void)
 {
 
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glClearColor(0.0, 0.3, 0.3, 1.0);
+  glClearColor(0.3, 0.3, 0.3, 1.0);
   glEnable(GL_DEPTH_TEST);
   glEnable(GL_MULTISAMPLE);
 
@@ -139,8 +155,10 @@ void renderScene(void)
 //      Model =  rotationMatrix * translationMatrix * scaleMatrix;
 
 
-     //glm::mat4 rotationMatrix2 = glm::rotate(rotationMatrix, 45.0f ,glm::vec3(1,0,0));
-     Model2 =  rotationMatrix*translationMatrix2*scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
+        //glm::mat4 rotationMatrix2 = glm::rotate(rotationMatrix, 45.0f ,glm::vec3(1,0,0));
+
+
+        Model2 =  rotationMatrix*translationMatrix2*scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
 
 
 //   Pre- or post-multiplication just defines the order of operations how the member of that matrix and vector are multiplied, its purely a notational convention.
@@ -184,11 +202,11 @@ void renderScene(void)
     //1)Camera Supporting Roll (around Z axis)
 
     // Recompute Up Vector -  Supporting Roll (around Z axis)
-    glm::mat4 View = glm::lookAt(
-                              glm::vec3(Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400/*0,0,-450*/),
-                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
-                              glm::vec3(newUp) /*glm::vec3(0,1,0)*/  // Head is up (set to 0,-1,0 to look upside-down)
-                              );
+//    glm::mat4 View = glm::lookAt(
+//                              glm::vec3(Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400/*0,0,-450*/),
+//                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
+//                              glm::vec3(newUp) /*glm::vec3(0,1,0)*/  // Head is up (set to 0,-1,0 to look upside-down)
+//                              );
 
 
     // 2) Standar Up Vector - Not Supporting Roll (around Z axis)
@@ -204,14 +222,18 @@ void renderScene(void)
     // 3) Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
-//    glm::mat4 View = glm::lookAt(
-//                              glm::vec3(0,0,-450),
-//                              glm::vec3(Model[3][0]*400, Model[3][1]*400, Model[3][2]*400), // and looks at the origin
-//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                              );
+    glm::mat4 View = glm::lookAt(
+                              glm::vec3(0,0,-350),
+                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
+                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                              );
 
 
-    glm::mat4 MVP        = Projection * View * Model; // Remember, matrix multiplication works the other way around (<----<----<)
+    //HERE I SCALED CAUSE THE TESTING MODEL WAS BIG & translated it the be centered to the screen
+
+
+
+    glm::mat4 MVP        = Projection * View * glm::scale(Model,glm::vec3(0.1f,0.1f,0.1f)); // Remember, matrix multiplication works the other way around (<----<----<)
 
     glm::mat4 MVP2       = Projection * View * Model2; // Remember, matrix multiplication works the other way around (<----<----<)
 
@@ -228,14 +250,50 @@ void renderScene(void)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
     //Load Matrices to Shader END
 
-
+    //use shader with program id = program
     glUseProgram(program);
 
-    glBindVertexArray(m->GetModel("cube1"));
+    //Pass light to shader
+    GLuint lightpos = glGetUniformLocation(m->m_shaderProgramId, "light.position");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniform3f(lightpos, gLight.position.x, gLight.position.y, gLight.position.z);
+    GLuint lightcolor = glGetUniformLocation(m->m_shaderProgramId, "light.intensities");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniform3f(lightcolor, gLight.intensities.x, gLight.intensities.y, gLight.intensities.z);
+    GLuint ambientColor = glGetUniformLocation(m->m_shaderProgramId, "light.ambientCoefficient");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniform1f(ambientColor, gLight.ambientCoefficient);
+
+
+
+    // Bind Texture before drawing - Used for apllying colored texture and normal mapping to the 2nd small cube
+
+    GLuint locColourMap = glGetUniformLocation(m->m_shaderProgramId, "tex"); // The texture map
+    glUniform1i(locColourMap, 0);//"tex" sampler2D
+
+    GLuint locNormalMap = glGetUniformLocation(m->m_shaderProgramId, "tex1"); // The normal map
+    glUniform1i(locNormalMap, 1);//"tex1" sampler2D
+
+    // Bind our texture to the appropriate texture image unit
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, m_textureNamesArray[0]);
+
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, m_textureNamesArray[1]);
 
 
     // Cube 1 DRAWING
-    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices (6 planes * 2 triangles * 3 vertices each = 36 vertices passed onto)
+
+    glBindVertexArray(m->GetModel("cube1"));
+
+    // Pass model matrix of 1st cube to shader for lighting calculations (However this could also happen here in c++ code as well for performance reasons)
+    GLuint modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniformMatrix4fv(modelmatrixPassToShader, 1, GL_FALSE, &Model[0][0]);
+
+    glm::mat4 MV = View*Model;
+    GLuint worldmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "MV");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniformMatrix4fv(worldmatrixPassToShader, 1, GL_FALSE, &MV[0][0]);
+
+
+
+    glDrawArrays(GL_TRIANGLES, 0, m->vboMesh.size());//model made of mesh's vertices
     glBindVertexArray(0);
 
     //  Cube 2 DRAWING
@@ -262,10 +320,9 @@ void renderScene(void)
 //        glBindVertexArray(0);
 //    }
 
-    //  Bind Texture before drawing
-    glBindTexture(GL_TEXTURE_2D,m_textureName);
 
 
+    //bind and draw cube 2
     glBindVertexArray(m->GetModel("cube2"));
     glGetUniformLocation(program, "MVP");
 
@@ -273,10 +330,17 @@ void renderScene(void)
     // in the "MVP" uniform
     // For each model you render, since the MVP will be different (at least the M part)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
-    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices
+
+    // Pass model matrix of 2nd cube to shader for lighting calculations (However this could also happen here in c++ code as well for performance reasons)
+    modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    glUniformMatrix4fv(modelmatrixPassToShader, 1, GL_FALSE, &Model2[0][0]);
+
+    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices (1 cube = 6 planes * 2 triangles each plane * 3 vertices each triangle = 36 vertices passed onto the shader)
     glBindVertexArray(0);
 
-    unLoadTexture();
+    //unbind Texture
+//    unLoadTexture();
+
 
     // GRID DRAWING
 
@@ -303,9 +367,8 @@ void renderScene(void)
     glUniform4fv(colorUniformAttr, 1, uniformColor);
 
 
-
     // Draw Horizontal Lines
-    for(int i = 0; i < 50; i++)
+    for (int i = 0; i < 50; i++)
     {
       glDrawArrays(GL_LINE_STRIP, 50*i, 50);
 //    That works, although we did make 50 OpenGL calls,
@@ -317,7 +380,8 @@ void renderScene(void)
 
     //Cheating using stride to draw vertical lines
     //Draw Vertical Lines
-    for(int i = 0; i < 50; i++) {
+    for(int i = 0; i < 50; i++)
+    {
       glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 50 * sizeof(ModelLoader::point), (void *)(i * sizeof(ModelLoader::point)));//draw every other 12 bytes (cause struct point contains 3 GLFloats and so..3*4bytes=12 bytes)
       glDrawArrays(GL_LINE_STRIP, 0, 50);
     }
@@ -341,7 +405,11 @@ void renderScene(void)
 
     m_Frames++;
 
+//    gLight.position.z=-500+2*500/6*cos(m_Frames*M_PI/180);
+
+
 }
+
 
 void Init()
 {
@@ -357,7 +425,7 @@ void Init()
 
     //load and compile shaders
     Shader shader;
-    shader.InitShaders("./shaders/shader.vs", "./shaders/shader.fs");
+    shader.InitShaders("./shaders/shaderV.glsl", "./shaders/shaderF.glsl");
     program = shader.getProgramShaderId();
 
     //  Enable Vaos & Load
@@ -365,10 +433,12 @@ void Init()
 //    m = new ModelLoader(program);
 
 
-    m->CreateCubeModel("cube1");
+
+    m->CreateCubeModel("cube1", m_vaoMesh);
 
 
-    loadTexture();//create the texture to be loaded as part of the cube2 model
+    loadTexture("textures/Imrod_Diffuse.tga");
+    loadTexture("textures/Imrod_norm.tga");//create the texture to be loaded as part of the cube2 model
 
 
     //    Draw Multiple (100) Vaos at 60fps
@@ -378,6 +448,12 @@ void Init()
     //   sprintf(tmpbuf, "cube%d",i);
          m->CreateCubeModel2(/*tmpbuf*/"cube2");
     // }
+
+
+     // Initialize light
+     gLight.intensities.x=1.5; gLight.intensities.y=1.5; gLight.intensities.z=1;// light's color
+     gLight.position.x=0; gLight.position.y=1; gLight.position.z=500;// light's position
+     gLight.ambientCoefficient=1.7;
 
 
     m->CreateGrid("Grid");
@@ -444,10 +520,10 @@ void unLoadTexture()
     glBindTexture( GL_TEXTURE_2D, 0 );
 }
 
-void loadTexture()
+void loadTexture(const char* texturePath)
 {
   QImage *image = new QImage();
-  bool loaded=image->load("textures/basketball.jpg");
+  bool loaded=image->load(texturePath);
   if(loaded == true)
   {
     int width=image->width();
@@ -468,17 +544,37 @@ void loadTexture()
       }
     }
 
+        if(loaderTexturesCounter++==0)// generate mipmaps for the 1st texture
+        {
+            glGenTextures(1,&m_textureNamesArray[0]);
+            // Bind our texture to the appropriate texture image unit
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, m_textureNamesArray[0]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+            std::cout<<"texture GL set "<<texturePath<<"\n";
+            glGenerateMipmap(GL_TEXTURE_2D); //  Allocate the mipmaps
+        }
+        else// generate mipmaps for the 2nd texture
+        {
+            glGenTextures(1,&m_textureNamesArray[1]);
+            // Bind our texture to the appropriate texture image unit
+            glActiveTexture(GL_TEXTURE1);
+            glBindTexture(GL_TEXTURE_2D,m_textureNamesArray[1]);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
-  glGenTextures(1,&m_textureName);
-  glBindTexture(GL_TEXTURE_2D,m_textureName);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+            glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
+          std::cout<<"texture GL set "<<texturePath<<"\n";
+            glGenerateMipmap(GL_TEXTURE_2D); //  Allocate the mipmaps
+        }
 
-  glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-
-  glGenerateMipmap(GL_TEXTURE_2D); //  Allocate the mipmaps
 
   }
+
+  glEnable(GL_MULTISAMPLE);
+
 }
 
 int main(/*int argc, char **argv*/)
@@ -493,7 +589,7 @@ int main(/*int argc, char **argv*/)
     while(!display.isClosed())
     {
         //  Clear background
-        display.clear(0,0.05,0.05,1);
+        display.clear(0.3, 0.3, 0.3,1);
         renderScene();
 
         // Calculate TimeElapsed & FPS
@@ -511,8 +607,10 @@ int main(/*int argc, char **argv*/)
  ModelLoader::DestroySingleton();
  glDeleteProgram(program);
 
+ unLoadTexture();
  // remove the texture now we are done
- glDeleteTextures(1,&m_textureName);
+ glDeleteTextures(2,m_textureNamesArray);
+
 
  return 0;
 

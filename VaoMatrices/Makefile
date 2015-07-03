@@ -15,10 +15,10 @@ CXX           = clang++
 DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
 CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIE $(DEFINES)
-INCPATH       = -I/opt/Qt/5.3/gcc_64/mkspecs/linux-clang -I. -Iinclude -I/opt/Qt/5.3/gcc_64/include -I/opt/Qt/5.3/gcc_64/include/QtOpenGL -I/opt/Qt/5.3/gcc_64/include/QtWidgets -I/opt/Qt/5.3/gcc_64/include/QtGui -I/opt/Qt/5.3/gcc_64/include/QtCore -Imoc
+INCPATH       = -I/opt/Qt/5.3/gcc_64/mkspecs/linux-clang -I. -Iinclude -I../../../../NGL/include -Iobjloaderlib/objTester/objTester -I/opt/Qt/5.3/gcc_64/include -I/opt/Qt/5.3/gcc_64/include/QtOpenGL -I/opt/Qt/5.3/gcc_64/include/QtWidgets -I/opt/Qt/5.3/gcc_64/include/QtGui -I/opt/Qt/5.3/gcc_64/include/QtCore -Imoc
 LINK          = clang++
 LFLAGS        = -ccc-gcc-name g++ -Wl,-rpath,/opt/Qt/5.3/gcc_64 -Wl,-rpath,/opt/Qt/5.3/gcc_64/lib
-LIBS          = $(SUBLIBS) -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW -lGLU -L/opt/Qt/5.3/gcc_64/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW -lGLU -L/$(HOME)/NGL/lib -l NGL -L/opt/Qt/5.3/gcc_64/lib -lQt5OpenGL -lQt5Widgets -lQt5Gui -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 QMAKE         = /opt/Qt/5.3/gcc_64/bin/qmake
@@ -49,12 +49,22 @@ SOURCES       = src/main.cpp \
 		src/display.cpp \
 		src/shader.cpp \
 		src/singleton.cpp \
-		src/ModelLoader.cpp 
+		src/ModelLoader.cpp \
+		objloaderlib/objTester/objTester/list.cpp \
+		objloaderlib/objTester/objTester/objLoader.cpp \
+		objloaderlib/objTester/objTester/obj_parser.cpp \
+		objloaderlib/objTester/objTester/objTester.cpp \
+		objloaderlib/objTester/objTester/string_extra.cpp 
 OBJECTS       = obj/main.o \
 		obj/display.o \
 		obj/shader.o \
 		obj/singleton.o \
-		obj/ModelLoader.o
+		obj/ModelLoader.o \
+		obj/list.o \
+		obj/objLoader.o \
+		obj/obj_parser.o \
+		obj/objTester.o \
+		obj/string_extra.o
 DIST          = /opt/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		/opt/Qt/5.3/gcc_64/mkspecs/common/shell-unix.conf \
 		/opt/Qt/5.3/gcc_64/mkspecs/common/unix.conf \
@@ -165,7 +175,12 @@ DIST          = /opt/Qt/5.3/gcc_64/mkspecs/features/spec_pre.prf \
 		src/display.cpp \
 		src/shader.cpp \
 		src/singleton.cpp \
-		src/ModelLoader.cpp
+		src/ModelLoader.cpp \
+		objloaderlib/objTester/objTester/list.cpp \
+		objloaderlib/objTester/objTester/objLoader.cpp \
+		objloaderlib/objTester/objTester/obj_parser.cpp \
+		objloaderlib/objTester/objTester/objTester.cpp \
+		objloaderlib/objTester/objTester/string_extra.cpp
 QMAKE_TARGET  = VaoTriangle
 DESTDIR       = #avoid trailing-slash linebreak
 TARGET        = VaoTriangle
@@ -428,7 +443,7 @@ qmake_all: FORCE
 
 dist: 
 	@test -d obj/VaoTriangle1.0.0 || mkdir -p obj/VaoTriangle1.0.0
-	$(COPY_FILE) --parents $(DIST) obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents include/Vertexformat.h include/display.h include/shader.h include/singleton.h include/ModelLoader.h obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents src/main.cpp src/display.cpp src/shader.cpp src/singleton.cpp src/ModelLoader.cpp obj/VaoTriangle1.0.0/ && (cd `dirname obj/VaoTriangle1.0.0` && $(TAR) VaoTriangle1.0.0.tar VaoTriangle1.0.0 && $(COMPRESS) VaoTriangle1.0.0.tar) && $(MOVE) `dirname obj/VaoTriangle1.0.0`/VaoTriangle1.0.0.tar.gz . && $(DEL_FILE) -r obj/VaoTriangle1.0.0
+	$(COPY_FILE) --parents $(DIST) obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents include/display.h include/shader.h include/singleton.h include/ModelLoader.h include/VertexStructure.h objloaderlib/objTester/objTester/list.h objloaderlib/objTester/objTester/objLoader.h objloaderlib/objTester/objTester/obj_parser.h objloaderlib/objTester/objTester/string_extra.h obj/VaoTriangle1.0.0/ && $(COPY_FILE) --parents src/main.cpp src/display.cpp src/shader.cpp src/singleton.cpp src/ModelLoader.cpp objloaderlib/objTester/objTester/list.cpp objloaderlib/objTester/objTester/objLoader.cpp objloaderlib/objTester/objTester/obj_parser.cpp objloaderlib/objTester/objTester/objTester.cpp objloaderlib/objTester/objTester/string_extra.cpp obj/VaoTriangle1.0.0/ && (cd `dirname obj/VaoTriangle1.0.0` && $(TAR) VaoTriangle1.0.0.tar VaoTriangle1.0.0 && $(COMPRESS) VaoTriangle1.0.0.tar) && $(MOVE) `dirname obj/VaoTriangle1.0.0`/VaoTriangle1.0.0.tar.gz . && $(DEL_FILE) -r obj/VaoTriangle1.0.0
 
 
 clean:compiler_clean 
@@ -468,7 +483,7 @@ compiler_clean:
 ####### Compile
 
 obj/main.o: src/main.cpp include/ModelLoader.h \
-		include/Vertexformat.h \
+		include/VertexStructure.h \
 		include/singleton.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/QMutexLocker \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
@@ -499,21 +514,28 @@ obj/main.o: src/main.cpp include/ModelLoader.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/QTime \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qdatetime.h \
+		../../../../NGL/include/ngl/VertexArrayObject.h \
+		../../../../NGL/include/ngl/Types.h \
+		../../../../NGL/include/ngl/glew.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/QGLContext \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopengl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qt_windows.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopengles2ext.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopenglext.h \
+		/opt/Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobject.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qstring.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qchar.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qobject.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qlist.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
@@ -524,32 +546,67 @@ obj/main.o: src/main.cpp include/ModelLoader.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qhash.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qpair.h \
-		include/display.h \
-		include/shader.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/QImage \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qimage.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qvector.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qrect.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qsize.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qregion.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qline.h \
-		/opt/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
 		/opt/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
 		/opt/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpair.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qevent.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpaintengine.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qglcolormap.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qtopenglglobal.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/QSurfaceFormat \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/QTime \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdatetime.h \
+		include/display.h \
+		include/shader.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/QImage
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/main.o src/main.cpp
 
 obj/display.o: src/display.cpp include/display.h
@@ -591,7 +648,7 @@ obj/singleton.o: src/singleton.cpp include/singleton.h \
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/singleton.o src/singleton.cpp
 
 obj/ModelLoader.o: src/ModelLoader.cpp include/ModelLoader.h \
-		include/Vertexformat.h \
+		include/VertexStructure.h \
 		include/singleton.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/QMutexLocker \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qmutex.h \
@@ -621,8 +678,130 @@ obj/ModelLoader.o: src/ModelLoader.cpp include/ModelLoader.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_gcc.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qatomic_unix.h \
 		/opt/Qt/5.3/gcc_64/include/QtCore/qglobalstatic.h \
-		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnumeric.h \
+		../../../../NGL/include/ngl/VertexArrayObject.h \
+		../../../../NGL/include/ngl/Types.h \
+		../../../../NGL/include/ngl/glew.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/QGLContext \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qgl.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopengl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qt_windows.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopengles2ext.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qopenglext.h \
+		/opt/Qt/5.3/gcc_64/include/QtWidgets/qwidget.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qnamespace.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobjectdefs_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qwindowdefs_win.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobject.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstring.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qchar.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qbytearray.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qrefcount.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qarraydata.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringbuilder.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlist.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qalgorithms.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qiterator.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcoreevent.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qscopedpointer.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmetatype.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvarlengtharray.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcontainerfwd.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qisenum.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qobject_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmargins.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpaintdevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qrect.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsize.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpoint.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpalette.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qcolor.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qrgb.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringlist.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdatastream.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qiodevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qpair.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qregexp.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qstringmatcher.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qbrush.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvector.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qmatrix.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpolygon.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qregion.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qline.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtransform.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpainterpath.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qimage.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpixmap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qshareddata.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qsharedpointer_impl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qhash.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfont.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfontmetrics.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qfontinfo.h \
+		/opt/Qt/5.3/gcc_64/include/QtWidgets/qsizepolicy.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qcursor.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qkeysequence.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qevent.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qvariant.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qmap.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qdebug.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qtextstream.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qlocale.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qset.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qcontiguouscache.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qurl.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qurlquery.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfile.h \
+		/opt/Qt/5.3/gcc_64/include/QtCore/qfiledevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qvector2d.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtouchdevice.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpaintengine.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpainter.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qtextoption.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qpen.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qglcolormap.h \
+		/opt/Qt/5.3/gcc_64/include/QtOpenGL/qtopenglglobal.h \
+		/opt/Qt/5.3/gcc_64/include/QtGui/QSurfaceFormat \
+		/opt/Qt/5.3/gcc_64/include/QtGui/qsurfaceformat.h \
+		../../../../NGL/include/ngl/Obj.h \
+		../../../../NGL/include/ngl/Texture.h \
+		../../../../NGL/include/ngl/Colour.h \
+		../../../../NGL/include/ngl/Vec4.h \
+		../../../../NGL/include/ngl/Vec2.h \
+		../../../../NGL/include/ngl/Vec3.h \
+		../../../../NGL/include/ngl/AbstractMesh.h \
+		../../../../NGL/include/ngl/BBox.h \
+		../../../../NGL/include/ngl/RibExport.h \
+		../../../../NGL/include/ngl/NGLassert.h \
+		objloaderlib/objTester/objTester/objLoader.h \
+		objloaderlib/objTester/objTester/obj_parser.h \
+		objloaderlib/objTester/objTester/list.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/ModelLoader.o src/ModelLoader.cpp
+
+obj/list.o: objloaderlib/objTester/objTester/list.cpp objloaderlib/objTester/objTester/list.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/list.o objloaderlib/objTester/objTester/list.cpp
+
+obj/objLoader.o: objloaderlib/objTester/objTester/objLoader.cpp objloaderlib/objTester/objTester/objLoader.h \
+		objloaderlib/objTester/objTester/obj_parser.h \
+		objloaderlib/objTester/objTester/list.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/objLoader.o objloaderlib/objTester/objTester/objLoader.cpp
+
+obj/obj_parser.o: objloaderlib/objTester/objTester/obj_parser.cpp objloaderlib/objTester/objTester/obj_parser.h \
+		objloaderlib/objTester/objTester/list.h \
+		objloaderlib/objTester/objTester/string_extra.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/obj_parser.o objloaderlib/objTester/objTester/obj_parser.cpp
+
+obj/objTester.o: objloaderlib/objTester/objTester/objTester.cpp objloaderlib/objTester/objTester/objLoader.h \
+		objloaderlib/objTester/objTester/obj_parser.h \
+		objloaderlib/objTester/objTester/list.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/objTester.o objloaderlib/objTester/objTester/objTester.cpp
+
+obj/string_extra.o: objloaderlib/objTester/objTester/string_extra.cpp objloaderlib/objTester/objTester/string_extra.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o obj/string_extra.o objloaderlib/objTester/objTester/string_extra.cpp
 
 ####### Install
 
