@@ -10,7 +10,7 @@ layout(location = 5) in vec3 in_binormal;
 
 uniform mat4 MVP;
 
-out vec4 color;
+out vec4 nativeVaocolor;
 //out vec2 uvVert;
 
 
@@ -56,7 +56,7 @@ void main()
   fragTexCoord=in_uv;
   fragNormal=in_normal;
 
-  color = in_color;
+  nativeVaocolor = in_color;
   vec4 v = vec4(in_position, 1);
   gl_Position = MVP * v;
   //uvVert = in_uv;

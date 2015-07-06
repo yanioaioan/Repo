@@ -75,16 +75,13 @@ glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
 glm::mat4 scaleMatrix2 = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
 
 
-static bool translate=true;
-static int temp;
+//static bool translate=true;
+//static int temp;
 
 glm::vec4 newUp(0,1,0,0);
 
 static float z_rot;
 
-
-
-ngl::VertexArrayObject *m_vaoMesh;
 
 void renderScene(void)
 {
@@ -223,17 +220,14 @@ void renderScene(void)
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
     glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,0,-350),
-                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
+                              glm::vec3(0,50,-250),
+                              glm::vec3(Model[3][0], Model[3][1]+1, Model[3][2]), // and looks at the origin
                               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                               );
 
 
-    //HERE I SCALED CAUSE THE TESTING MODEL WAS BIG & translated it the be centered to the screen
-
-
-
-    glm::mat4 MVP        = Projection * View * glm::scale(Model,glm::vec3(0.1f,0.1f,0.1f)); // Remember, matrix multiplication works the other way around (<----<----<)
+    //  HERE I SCALED CAUSE THE TESTING MODEL WAS BIG & translated it the be centered to the screen
+    glm::mat4 MVP        = Projection * View * glm::scale(Model,glm::vec3(0.1,0.1,0.1)); // Remember, matrix multiplication works the other way around (<----<----<)
 
     glm::mat4 MVP2       = Projection * View * Model2; // Remember, matrix multiplication works the other way around (<----<----<)
 
@@ -279,9 +273,10 @@ void renderScene(void)
     glBindTexture(GL_TEXTURE_2D, m_textureNamesArray[1]);
 
 
-    // Cube 1 DRAWING
+    // Warrior Drawing / Or Cube 1 DRAWING
 
-    glBindVertexArray(m->GetModel("cube1"));
+//    glBindVertexArray(m->GetModel("cube1"));
+    glBindVertexArray(m->GetModel("Warrior"));
 
     // Pass model matrix of 1st cube to shader for lighting calculations (However this could also happen here in c++ code as well for performance reasons)
     GLuint modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
@@ -290,7 +285,6 @@ void renderScene(void)
     glm::mat4 MV = View*Model;
     GLuint worldmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "MV");//or 'zero' instead of retrieving the reference to the attribute "position input"
     glUniformMatrix4fv(worldmatrixPassToShader, 1, GL_FALSE, &MV[0][0]);
-
 
 
     glDrawArrays(GL_TRIANGLES, 0, m->vboMesh.size());//model made of mesh's vertices
@@ -335,7 +329,7 @@ void renderScene(void)
     modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
     glUniformMatrix4fv(modelmatrixPassToShader, 1, GL_FALSE, &Model2[0][0]);
 
-    glDrawArrays(GL_TRIANGLES, 0, 36);//cube made of 36 vertices (1 cube = 6 planes * 2 triangles each plane * 3 vertices each triangle = 36 vertices passed onto the shader)
+    glDrawArrays(GL_TRIANGLES, 0, m->cube2Vertices);//cube made of 36 vertices (1 cube = 6 planes * 2 triangles each plane * 3 vertices each triangle = 36 vertices passed onto the shader)
     glBindVertexArray(0);
 
     //unbind Texture
@@ -362,7 +356,7 @@ void renderScene(void)
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
 
     //Set Uniform color for the grid
-    GLuint colorUniformAttr = glGetUniformLocation(m->m_shaderProgramId, "mycolor");//or 'zero' instead of retrieving the reference to the attribute "position input"
+    GLuint colorUniformAttr = glGetUniformLocation(m->m_shaderProgramId, "gridcolor");//or 'zero' instead of retrieving the reference to the attribute "position input"
     GLfloat uniformColor[] = { 0.3f, 0.2f, 0.25f, 1.0f};
     glUniform4fv(colorUniformAttr, 1, uniformColor);
 
@@ -405,7 +399,8 @@ void renderScene(void)
 
     m_Frames++;
 
-//    gLight.position.z=-500+2*500/6*cos(m_Frames*M_PI/180);
+    gLight.position.z=-10+2*10/6*cos(m_Frames*M_PI/180);
+     gLight.position.x=-1+2/6*cos(m_Frames*M_PI/180);
 
 
 }
@@ -434,8 +429,8 @@ void Init()
 
 
 
-    m->CreateCubeModel("cube1", m_vaoMesh);
-
+//    m->CreateCubeModel("cube1");
+    m->CreateWarriorModel("Warrior");
 
     loadTexture("textures/Imrod_Diffuse.tga");
     loadTexture("textures/Imrod_norm.tga");//create the texture to be loaded as part of the cube2 model
@@ -451,8 +446,8 @@ void Init()
 
 
      // Initialize light
-     gLight.intensities.x=1.5; gLight.intensities.y=1.5; gLight.intensities.z=1;// light's color
-     gLight.position.x=0; gLight.position.y=1; gLight.position.z=500;// light's position
+     gLight.intensities.x=1.5; gLight.intensities.y=1.5; gLight.intensities.z=1.5;// light's color
+     gLight.position.x=0; gLight.position.y=20; gLight.position.z=-20;// light's position
      gLight.ambientCoefficient=1.7;
 
 
@@ -601,7 +596,7 @@ int main(/*int argc, char **argv*/)
         display.update();
     }
 
-// m->DeleteModel("cube1");m->DeleteModel("cube2");m->DeleteModel("grid");no need to be called since the ModelLoader destructor takes care of the clean up process
+// m->DeleteModel("cube1");m->DeleteModel("cube2");m->DeleteModel("grid"); No need to be called since the ModelLoader destructor takes care of the clean up process
 // delete m;//if we don't make use of singleton we need to delete the actual ModelLoader m object
 
  ModelLoader::DestroySingleton();
@@ -611,9 +606,5 @@ int main(/*int argc, char **argv*/)
  // remove the texture now we are done
  glDeleteTextures(2,m_textureNamesArray);
 
-
  return 0;
-
-
-
 }

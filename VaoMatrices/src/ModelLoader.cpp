@@ -39,233 +39,15 @@ ModelLoader::~ModelLoader()
 
 
 
-//void ModelLoader::CreateCubeModel(const std::string& gameModelName)
-//{
-//   unsigned int vao;
-//   unsigned int vbo;
-
-//   glGenVertexArrays(1, &vao);
-//   glBindVertexArray(vao);
-
-//   std::vector<VertexStructure> vertices;//our vertex positions & colors
-
-///*   Manual Addition of Values   */
-////   vertices.push_back(VertexStructure(glm::vec3( 0.5, -0.5, 0.5), glm::vec4( 1,-0, 0, 1)));
-////   vertices.push_back(VertexStructure(glm::vec3(-0.5, -0.5, -0.5), glm::vec4( 0, 1, 0, 1)));
-////   vertices.push_back(VertexStructure(glm::vec3( 0.5, 0.5, 0.0),  glm::vec4( 1, 0, 1, 1)));
-
-
-
-////   // Left bottom triangle
-////           -0.5f, 0.5f, 0f,
-////           -0.5f, -0.5f, 0f,
-////           0.5f, -0.5f, 0f,
-////           // Right top triangle
-////           0.5f, -0.5f, 0f,
-////           0.5f, 0.5f, 0f,
-////           -0.5f, 0.5f, 0f
-
-//   /*** Supposedely Imported Attributes  START***/   /*CENTER CUBE*/
-//   std::vector<glm::vec3> imported_positions;
-//   imported_positions.push_back(glm::vec3( -1 , -1, -1));imported_positions.push_back(glm::vec3( -1, 1, -1));imported_positions.push_back(glm::vec3( -1, 1, 1)); //LEFT
-//   imported_positions.push_back(glm::vec3( -1, 1, 1));imported_positions.push_back(glm::vec3( -1,-1,-1));imported_positions.push_back(glm::vec3( -1,-1,1));//get all position values
-
-//   imported_positions.push_back(glm::vec3( 1 , 1, -1));imported_positions.push_back(glm::vec3( 1, 1, 1));imported_positions.push_back(glm::vec3( 1, -1, -1)); //RIGHT
-//   imported_positions.push_back(glm::vec3( 1,-1,-1));imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3( 1,1,1));//get all position values
-
-//   imported_positions.push_back(glm::vec3( -1,1,-1));imported_positions.push_back(glm::vec3( -1,1,1));imported_positions.push_back(glm::vec3( 1, 1, 1)); //UP
-//   imported_positions.push_back(glm::vec3( 1,1,1));imported_positions.push_back(glm::vec3(1,1,-1));imported_positions.push_back(glm::vec3(-1,1,-1));//get all position values
-
-//   imported_positions.push_back(glm::vec3( -1,-1,-1));imported_positions.push_back(glm::vec3( -1,-1,1));imported_positions.push_back(glm::vec3( 1, -1, 1)); //DOWN
-//   imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3(1,-1,-1));imported_positions.push_back(glm::vec3(-1,-1,-1));//get all position values
-
-//   imported_positions.push_back(glm::vec3( -1,1,-1));imported_positions.push_back(glm::vec3( 1,1,-1));imported_positions.push_back(glm::vec3( 1, -1, -1)); //FRONT
-//   imported_positions.push_back(glm::vec3( 1,-1,-1));imported_positions.push_back(glm::vec3(-1,-1,-1));imported_positions.push_back(glm::vec3(-1,1,-1));//get all position values
-
-//   imported_positions.push_back(glm::vec3( -1,-1,1));imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3( 1,1,1)); //BACK
-//   imported_positions.push_back(glm::vec3( 1,1,1));imported_positions.push_back(glm::vec3(-1,1,1));imported_positions.push_back(glm::vec3(-1,-1,1));//get all position values
-
-
-
-//   std::vector<glm::vec4> imported_colours;
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-
-//   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
-//   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
-//   /*** Supposedely Imported Attributes  END***/
-
-
-//   //Just For Test Purposes, to be removed
-//   std::vector<glm::vec2> imported_texureUVs;
-
-
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-//   imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-//   imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-//   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-
-//   //----------------------------------------------//
-//   //   sample of cube from maya
-//   //   vt 0.000000 0.000000
-//   //   vt 1.000000 0.000000
-//   //   vt 1.000000 1.000000
-//   //   vt 0.000000 1.000000
-
-
-//   std::vector<glm::vec2> textures;
-//   for(unsigned int i=0;i<imported_texureUVs.size();i++)
-//   {
-//       textures.push_back(glm::vec2(imported_texureUVs[i]));
-//   }
-
-
-
-//   //Calculate Vertex Normals
-//   std::vector<glm::vec3> imported_normals;
-//       glm::vec3 nLeft = glm::cross( (imported_positions[1]-imported_positions[0]) , ((imported_positions[2]-imported_positions[0])) );//left normal
-//       glm::vec3 nRight = glm::cross( (imported_positions[7]-imported_positions[6]) , ((imported_positions[8]-imported_positions[6])) );//right normal
-//       glm::vec3 nUp = glm::cross( (imported_positions[13]-imported_positions[12]) , ((imported_positions[14]-imported_positions[12])) );//up normal
-//       glm::vec3 nDown = glm::cross( (imported_positions[19]-imported_positions[18]) , ((imported_positions[20]-imported_positions[18])) );//down normal
-//       glm::vec3 nFront = glm::cross( (imported_positions[25]-imported_positions[24]) , ((imported_positions[26]-imported_positions[24])) );//front normal
-//       glm::vec3 nBack = glm::cross( (imported_positions[31]-imported_positions[30]) , ((imported_positions[32]-imported_positions[30])) );//back normal
-
-//       glm::normalize(nLeft);glm::normalize(nRight);glm::normalize(nUp);glm::normalize(nDown);glm::normalize(nFront);glm::normalize(nBack);
-
-//   //Fill the normals' vector with the corresponind normal for each vertex as defined above (imported_positions)
-//   imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nBack+nUp)/3.0f );
-//   imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nBack+nDown)/3.0f );
-
-//   imported_normals.push_back( (nRight+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
-//   imported_normals.push_back( (nRight+nFront+nDown)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
-
-//   imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
-//   imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
-
-//   imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f );
-//   imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f );
-
-//   imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
-//   imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
-
-//   imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
-//   imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f );
-
-
-//   std::vector<glm::vec3> normals;
-//   for(unsigned int i=0;i<imported_normals.size();i++)
-//   {
-//       normals.push_back(glm::vec3(imported_normals[i]));
-//   }
-
-
-//   //Just For Test Purposes, to be removed
-
-
-
-
-
-
-//   /*   Auto Addition of Values  Supposedely Imported START*/
-
-//    std::vector<glm::vec3> positions;
-
-//   //   positions.push_back(glm::vec3( 0.5, -0.5, 0.5));positions.push_back(glm::vec3( -0.5, -0.5, -0.5));positions.push_back(glm::vec3( 0.5, 0.5, 0.0));//get all position values
-//   for(unsigned int i=0;i<imported_positions.size();i++)
-//   {
-//       positions.push_back(glm::vec3(imported_positions[i]));
-//   }
-
-
-//   std::vector<glm::vec4> colours;
-//   //   colours.push_back(glm::vec4( 1,-0, 0, 1));colours.push_back(glm::vec4( 0, 1, 0, 1));colours.push_back(glm::vec4( 1,0, 1, 1));//get all colour values
-//   for(unsigned int i=0;i<imported_colours.size();i++)
-//   {
-//       colours.push_back(glm::vec4(imported_colours[i]));
-//   }
-//   /*   Auto Addition of Values  Supposedely Imported END*/
-
-
-//   /*  Structures to the VBO */
-//   if(positions.size()==colours.size())
-//   {
-//       for(unsigned int i=0;i<positions.size();i++)//for all vertices imported
-//       {
-
-//           VertexStructure d(positions[i],colours[i],/*glm::vec2(0,0)*/ textures[i], /*glm::vec3(1,1,1)*/ normals[i]);
-//           vertices.push_back(d);//each time add a VertexStructure of the retreived position and colour value
-////           std::cout<<positions[i][1]<<","<<colours[i][1]<<std::endl;
-//       }
-//   }
-
-
-//   glGenBuffers(1, &vbo);
-//   glBindBuffer(GL_ARRAY_BUFFER, vbo);
-//   glBufferData(GL_ARRAY_BUFFER, sizeof(VertexStructure) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
-
-//   posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or 'zero' instead of retrieving the reference to the attribute "position input"
-
-//   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
-//   glEnableVertexAttribArray(posAttrib);
-
-//   //addition for colours
-
-//   colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or 'one' instead of retrieving the reference to the attribute "position input"
-//   glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)12);// 3 coordinate element vertices * 4 byte float each one
-//   glEnableVertexAttribArray(colAttrib);
-
-
-//   //addition of texture uvs
-
-//   texAttrib = glGetAttribLocation(m_shaderProgramId, "in_uv");//or '2' instead of retrieving the reference to the attribute "position input"
-//   glEnableVertexAttribArray(texAttrib);
-//   glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)28);// 4 coordinate element vertices * 4 byte float each one so.... 12 byte which is the current offset +..16 = 28
-//                                                                                                                                                                                   //bytes offset for the uvs
-
-//   //addition of normals
-
-//   normAttrib = glGetAttribLocation(m_shaderProgramId, "in_normal");//or '3' instead of retrieving the reference to the attribute "position input"
-//   glEnableVertexAttribArray(normAttrib);
-//   glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)36);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
-//                                                                                                                                                                               //bytes offset for the normals
-
-
-//   Model myModel;                            //is allocated on Stack
-//   myModel.vao = vao;                        //add vao
-//   myModel.vbos.push_back(vbo);              //add vbo
-//   GameModelList[gameModelName] = myModel;  //add to std::map
-
-//}
-
-void ModelLoader::CreateCubeModel2(const std::string& gameModelName)
+void ModelLoader::CreateCubeModel(const std::string& gameModelName)
 {
-unsigned int vao;
-unsigned int vbo;
+   unsigned int vao;
+   unsigned int vbo;
 
-glGenVertexArrays(1, &vao);
-glBindVertexArray(vao);
+   glGenVertexArrays(1, &vao);
+   glBindVertexArray(vao);
 
-std::vector<VertexStructure> vertices;//our vertex positions & colors
+   std::vector<VertexStructure> vertices;//our vertex positions & colors
 
 /*   Manual Addition of Values   */
 //   vertices.push_back(VertexStructure(glm::vec3( 0.5, -0.5, 0.5), glm::vec4( 1,-0, 0, 1)));
@@ -283,79 +65,311 @@ std::vector<VertexStructure> vertices;//our vertex positions & colors
 //           0.5f, 0.5f, 0f,
 //           -0.5f, 0.5f, 0f
 
+   /*** Supposedely Imported Attributes  START***/   /*CENTER CUBE*/
+   std::vector<glm::vec3> imported_positions;
+   imported_positions.push_back(glm::vec3( -1 , -1, -1));imported_positions.push_back(glm::vec3( -1, 1, -1));imported_positions.push_back(glm::vec3( -1, 1, 1)); //LEFT
+   imported_positions.push_back(glm::vec3( -1, 1, 1));imported_positions.push_back(glm::vec3( -1,-1,-1));imported_positions.push_back(glm::vec3( -1,-1,1));//get all position values
 
-/*** Supposedely Imported Attributes  START***/   /*FRONT CUBE*/
-std::vector<glm::vec3> imported_positions;
-imported_positions.push_back(glm::vec3( -1 , -1, -4));imported_positions.push_back(glm::vec3( -1, 1, -4));imported_positions.push_back(glm::vec3( -1, 1, -2)); //LEFT
-imported_positions.push_back(glm::vec3( -1, 1, -2));imported_positions.push_back(glm::vec3( -1,-1, -4));imported_positions.push_back(glm::vec3( -1,-1,-2));//get all position values
+   imported_positions.push_back(glm::vec3( 1 , 1, -1));imported_positions.push_back(glm::vec3( 1, 1, 1));imported_positions.push_back(glm::vec3( 1, -1, -1)); //RIGHT
+   imported_positions.push_back(glm::vec3( 1,-1,-1));imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3( 1,1,1));//get all position values
 
-imported_positions.push_back(glm::vec3( 1 , 1, -4));imported_positions.push_back(glm::vec3( 1, 1, -2));imported_positions.push_back(glm::vec3( 1, -1, -4)); //RIGHT
-imported_positions.push_back(glm::vec3( 1,-1,-4));imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3( 1,1,-2));//get all position values
+   imported_positions.push_back(glm::vec3( -1,1,-1));imported_positions.push_back(glm::vec3( -1,1,1));imported_positions.push_back(glm::vec3( 1, 1, 1)); //UP
+   imported_positions.push_back(glm::vec3( 1,1,1));imported_positions.push_back(glm::vec3(1,1,-1));imported_positions.push_back(glm::vec3(-1,1,-1));//get all position values
 
-imported_positions.push_back(glm::vec3( -1,1,-4));imported_positions.push_back(glm::vec3( -1,1,-2));imported_positions.push_back(glm::vec3( 1, 1, -2)); //UP
-imported_positions.push_back(glm::vec3( 1,1,-2));imported_positions.push_back(glm::vec3(1,1,-4));imported_positions.push_back(glm::vec3(-1,1,-4));//get all position values
+   imported_positions.push_back(glm::vec3( -1,-1,-1));imported_positions.push_back(glm::vec3( -1,-1,1));imported_positions.push_back(glm::vec3( 1, -1, 1)); //DOWN
+   imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3(1,-1,-1));imported_positions.push_back(glm::vec3(-1,-1,-1));//get all position values
 
-imported_positions.push_back(glm::vec3( -1,-1,-4));imported_positions.push_back(glm::vec3( -1,-1,-2));imported_positions.push_back(glm::vec3( 1, -1, -2)); //DOWN
-imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3(1,-1,-4));imported_positions.push_back(glm::vec3(-1,-1,-4));//get all position values
+   imported_positions.push_back(glm::vec3( -1,1,-1));imported_positions.push_back(glm::vec3( 1,1,-1));imported_positions.push_back(glm::vec3( 1, -1, -1)); //FRONT
+   imported_positions.push_back(glm::vec3( 1,-1,-1));imported_positions.push_back(glm::vec3(-1,-1,-1));imported_positions.push_back(glm::vec3(-1,1,-1));//get all position values
 
-imported_positions.push_back(glm::vec3( -1,1,-4));imported_positions.push_back(glm::vec3( 1,1,-4));imported_positions.push_back(glm::vec3( 1, -1, -4)); //FRONT
-imported_positions.push_back(glm::vec3( 1,-1,-4));imported_positions.push_back(glm::vec3(-1,-1,-4));imported_positions.push_back(glm::vec3(-1,1,-4));//get all position values
-
-imported_positions.push_back(glm::vec3( -1,-1,-2));imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3( 1,1,-2)); //BACK
-imported_positions.push_back(glm::vec3( 1,1,-2));imported_positions.push_back(glm::vec3(-1,1,-2));imported_positions.push_back(glm::vec3(-1,-1,-2));//get all position values
-
-
-
-std::vector<glm::vec4> imported_colours;
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
-imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
-
-
-//GLfloat texture[] = {
-//                      0,0,0,1,1,1 ,0,0,1,0,1,1, //back
-//                      0,1,1,0,1,1 ,0,0,1,0,0,1, // front
-//                      0,0,1,0,1,1 ,0,1,1,1,0,0, //top
-//                      0,0,1,0,1,1 ,0,1,1,1,0,0, //bottom
-//                      1,0,1,1,0,0 ,0,0,0,1,1,1, // left
-//                      1,0,1,1,0,0 ,0,0,0,1,1,1, // right
-
-//                      };
-
-std::vector<glm::vec2> imported_texureUVs;
-
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
-imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
-imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_positions.push_back(glm::vec3( -1,-1,1));imported_positions.push_back(glm::vec3( 1,-1,1));imported_positions.push_back(glm::vec3( 1,1,1)); //BACK
+   imported_positions.push_back(glm::vec3( 1,1,1));imported_positions.push_back(glm::vec3(-1,1,1));imported_positions.push_back(glm::vec3(-1,-1,1));//get all position values
 
 
 
+   std::vector<glm::vec4> imported_colours;
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
 
-//Calculate Vertex Normals
-std::vector<glm::vec3> imported_normals;
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
+
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
+
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
+
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
+
+   imported_colours.push_back(glm::vec4( 1, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 0, 1, 1));imported_colours.push_back(glm::vec4( 0, 1, 0, 1));
+   imported_colours.push_back(glm::vec4( 1, 0, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 0, 1));imported_colours.push_back(glm::vec4( 1, 1, 1, 1));//get all position values
+   /*** Supposedely Imported Attributes  END***/
+
+
+   //Just For Test Purposes, to be removed
+   std::vector<glm::vec2> imported_texureUVs;
+
+
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+   imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+   imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+   imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+
+   //----------------------------------------------//
+   //   sample of cube from maya
+   //   vt 0.000000 0.000000
+   //   vt 1.000000 0.000000
+   //   vt 1.000000 1.000000
+   //   vt 0.000000 1.000000
+
+
+   std::vector<glm::vec2> textures;
+   for(unsigned int i=0;i<imported_texureUVs.size();i++)
+   {
+       textures.push_back(glm::vec2(imported_texureUVs[i]));
+   }
+
+
+
+   //Calculate Vertex Normals
+   std::vector<glm::vec3> imported_normals;
+       glm::vec3 nLeft = glm::cross( (imported_positions[1]-imported_positions[0]) , ((imported_positions[2]-imported_positions[0])) );//left normal
+       glm::vec3 nRight = glm::cross( (imported_positions[7]-imported_positions[6]) , ((imported_positions[8]-imported_positions[6])) );//right normal
+       glm::vec3 nUp = glm::cross( (imported_positions[13]-imported_positions[12]) , ((imported_positions[14]-imported_positions[12])) );//up normal
+       glm::vec3 nDown = glm::cross( (imported_positions[19]-imported_positions[18]) , ((imported_positions[20]-imported_positions[18])) );//down normal
+       glm::vec3 nFront = glm::cross( (imported_positions[25]-imported_positions[24]) , ((imported_positions[26]-imported_positions[24])) );//front normal
+       glm::vec3 nBack = glm::cross( (imported_positions[31]-imported_positions[30]) , ((imported_positions[32]-imported_positions[30])) );//back normal
+
+       glm::normalize(nLeft);glm::normalize(nRight);glm::normalize(nUp);glm::normalize(nDown);glm::normalize(nFront);glm::normalize(nBack);
+
+   //Fill the normals' vector with the corresponind normal for each vertex as defined above (imported_positions)
+   imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nBack+nUp)/3.0f );
+   imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nBack+nDown)/3.0f );
+
+   imported_normals.push_back( (nRight+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
+   imported_normals.push_back( (nRight+nFront+nDown)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+
+   imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+   imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
+
+   imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f );
+   imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f );
+
+   imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
+   imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
+
+   imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+   imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f );
+
+
+   std::vector<glm::vec3> normals;
+   for(unsigned int i=0;i<imported_normals.size();i++)
+   {
+       normals.push_back(glm::vec3(imported_normals[i]));
+   }
+
+
+   //Just For Test Purposes, to be removed
+
+
+
+
+
+
+   /*   Auto Addition of Values  Supposedely Imported START*/
+
+    std::vector<glm::vec3> positions;
+
+   //   positions.push_back(glm::vec3( 0.5, -0.5, 0.5));positions.push_back(glm::vec3( -0.5, -0.5, -0.5));positions.push_back(glm::vec3( 0.5, 0.5, 0.0));//get all position values
+   for(unsigned int i=0;i<imported_positions.size();i++)
+   {
+       positions.push_back(glm::vec3(imported_positions[i]));
+   }
+
+
+   std::vector<glm::vec4> colours;
+   //   colours.push_back(glm::vec4( 1,-0, 0, 1));colours.push_back(glm::vec4( 0, 1, 0, 1));colours.push_back(glm::vec4( 1,0, 1, 1));//get all colour values
+   for(unsigned int i=0;i<imported_colours.size();i++)
+   {
+       colours.push_back(glm::vec4(imported_colours[i]));
+   }
+   /*   Auto Addition of Values  Supposedely Imported END*/
+
+
+   /*  Structures to the VBO */
+   if(positions.size()==colours.size())
+   {
+       for(unsigned int i=0;i<positions.size();i++)//for all vertices imported
+       {
+
+           VertexStructure d(positions[i],colours[i],/*glm::vec2(0,0)*/ textures[i], /*glm::vec3(1,1,1)*/ normals[i],  glm::vec3(1,1,1),  glm::vec3(1,1,1));
+           vertices.push_back(d);//each time add a VertexStructure of the retreived position and colour value
+//           std::cout<<positions[i][1]<<","<<colours[i][1]<<std::endl;
+       }
+   }
+
+   cubeVertices=positions.size();
+
+   glGenBuffers(1, &vbo);
+   glBindBuffer(GL_ARRAY_BUFFER, vbo);
+   glBufferData(GL_ARRAY_BUFFER, sizeof(VertexStructure) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+   posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or 'zero' instead of retrieving the reference to the attribute "position input"
+
+   glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
+   glEnableVertexAttribArray(posAttrib);
+
+   //addition for colours
+
+   colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or 'one' instead of retrieving the reference to the attribute "position input"
+   glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)12);// 3 coordinate element vertices * 4 byte float each one
+   glEnableVertexAttribArray(colAttrib);
+
+
+   //addition of texture uvs
+
+   texAttrib = glGetAttribLocation(m_shaderProgramId, "in_uv");//or '2' instead of retrieving the reference to the attribute "position input"
+   glEnableVertexAttribArray(texAttrib);
+   glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)28);// 4 coordinate element vertices * 4 byte float each one so.... 12 byte which is the current offset +..16 = 28
+                                                                                                                                                                                   //bytes offset for the uvs
+
+   //addition of normals
+
+   normAttrib = glGetAttribLocation(m_shaderProgramId, "in_normal");//or '3' instead of retrieving the reference to the attribute "position input"
+   glEnableVertexAttribArray(normAttrib);
+   glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)36);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+                                                                                                                                                                               //bytes offset for the normals
+
+    //addition of bitangents
+
+    bitanAttrib = glGetAttribLocation(m_shaderProgramId, "in_bitangent");//or '3' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(bitanAttrib);
+    glVertexAttribPointer(bitanAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)48);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+
+    //addition of binormals
+
+    binorAttrib = glGetAttribLocation(m_shaderProgramId, "in_binormal");//or '3' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(binorAttrib);
+    glVertexAttribPointer(binorAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)60);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+
+
+
+   Model myModel;                            //is allocated on Stack
+   myModel.vao = vao;                        //add vao
+   myModel.vbos.push_back(vbo);              //add vbo
+   GameModelList[gameModelName] = myModel;  //add to std::map
+
+}
+
+void ModelLoader::CreateCubeModel2(const std::string& gameModelName)
+{
+    unsigned int vao;
+    unsigned int vbo;
+
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+
+    std::vector<VertexStructure> vertices;//our vertex positions & colors
+
+    /*   Manual Addition of Values   */
+    //   vertices.push_back(VertexStructure(glm::vec3( 0.5, -0.5, 0.5), glm::vec4( 1,-0, 0, 1)));
+    //   vertices.push_back(VertexStructure(glm::vec3(-0.5, -0.5, -0.5), glm::vec4( 0, 1, 0, 1)));
+    //   vertices.push_back(VertexStructure(glm::vec3( 0.5, 0.5, 0.0),  glm::vec4( 1, 0, 1, 1)));
+
+
+
+    //   // Left bottom triangle
+    //           -0.5f, 0.5f, 0f,
+    //           -0.5f, -0.5f, 0f,
+    //           0.5f, -0.5f, 0f,
+    //           // Right top triangle
+    //           0.5f, -0.5f, 0f,
+    //           0.5f, 0.5f, 0f,
+    //           -0.5f, 0.5f, 0f
+
+
+    /*** Supposedely Imported Attributes  START***/   /*FRONT CUBE*/
+    std::vector<glm::vec3> imported_positions;
+    imported_positions.push_back(glm::vec3( -1 , -1, -4));imported_positions.push_back(glm::vec3( -1, 1, -4));imported_positions.push_back(glm::vec3( -1, 1, -2)); //LEFT
+    imported_positions.push_back(glm::vec3( -1, 1, -2));imported_positions.push_back(glm::vec3( -1,-1, -4));imported_positions.push_back(glm::vec3( -1,-1,-2));//get all position values
+
+    imported_positions.push_back(glm::vec3( 1 , 1, -4));imported_positions.push_back(glm::vec3( 1, 1, -2));imported_positions.push_back(glm::vec3( 1, -1, -4)); //RIGHT
+    imported_positions.push_back(glm::vec3( 1,-1,-4));imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3( 1,1,-2));//get all position values
+
+    imported_positions.push_back(glm::vec3( -1,1,-4));imported_positions.push_back(glm::vec3( -1,1,-2));imported_positions.push_back(glm::vec3( 1, 1, -2)); //UP
+    imported_positions.push_back(glm::vec3( 1,1,-2));imported_positions.push_back(glm::vec3(1,1,-4));imported_positions.push_back(glm::vec3(-1,1,-4));//get all position values
+
+    imported_positions.push_back(glm::vec3( -1,-1,-4));imported_positions.push_back(glm::vec3( -1,-1,-2));imported_positions.push_back(glm::vec3( 1, -1, -2)); //DOWN
+    imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3(1,-1,-4));imported_positions.push_back(glm::vec3(-1,-1,-4));//get all position values
+
+    imported_positions.push_back(glm::vec3( -1,1,-4));imported_positions.push_back(glm::vec3( 1,1,-4));imported_positions.push_back(glm::vec3( 1, -1, -4)); //FRONT
+    imported_positions.push_back(glm::vec3( 1,-1,-4));imported_positions.push_back(glm::vec3(-1,-1,-4));imported_positions.push_back(glm::vec3(-1,1,-4));//get all position values
+
+    imported_positions.push_back(glm::vec3( -1,-1,-2));imported_positions.push_back(glm::vec3( 1,-1,-2));imported_positions.push_back(glm::vec3( 1,1,-2)); //BACK
+    imported_positions.push_back(glm::vec3( 1,1,-2));imported_positions.push_back(glm::vec3(-1,1,-2));imported_positions.push_back(glm::vec3(-1,-1,-2));//get all position values
+
+
+
+    std::vector<glm::vec4> imported_colours;
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));
+    imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));imported_colours.push_back(glm::vec4( 1, 1, 1, 0.3));//get all position values
+
+
+    //GLfloat texture[] = {
+    //                      0,0,0,1,1,1 ,0,0,1,0,1,1, //back
+    //                      0,1,1,0,1,1 ,0,0,1,0,0,1, // front
+    //                      0,0,1,0,1,1 ,0,1,1,1,0,0, //top
+    //                      0,0,1,0,1,1 ,0,1,1,1,0,0, //bottom
+    //                      1,0,1,1,0,0 ,0,0,0,1,1,1, // left
+    //                      1,0,1,1,0,0 ,0,0,0,1,1,1, // right
+
+    //                      };
+
+    std::vector<glm::vec2> imported_texureUVs;
+
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+    imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+    imported_texureUVs.push_back(glm::vec2( 1, 0)); imported_texureUVs.push_back(glm::vec2( 1, 1)); imported_texureUVs.push_back(glm::vec2( 0, 0));
+    imported_texureUVs.push_back(glm::vec2( 0, 0)); imported_texureUVs.push_back(glm::vec2( 0, 1)); imported_texureUVs.push_back(glm::vec2( 1, 1));
+
+
+
+
+    //Calculate Vertex Normals
+    std::vector<glm::vec3> imported_normals;
     glm::vec3 nLeft = glm::cross( (imported_positions[1]-imported_positions[0]) , ((imported_positions[2]-imported_positions[0])) );//left normal
     glm::vec3 nRight = glm::cross( (imported_positions[7]-imported_positions[6]) , ((imported_positions[8]-imported_positions[6])) );//right normal
     glm::vec3 nUp = glm::cross( (imported_positions[13]-imported_positions[12]) , ((imported_positions[14]-imported_positions[12])) );//up normal
@@ -365,123 +379,122 @@ std::vector<glm::vec3> imported_normals;
 
     glm::normalize(nLeft);glm::normalize(nRight);glm::normalize(nUp);glm::normalize(nDown);glm::normalize(nFront);glm::normalize(nBack);
 
-//Fill the normals' vector with the corresponind normal for each vertex as defined above (imported_positions)
-imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nBack+nUp)/3.0f );
-imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nBack+nDown)/3.0f );
+    //Fill the normals' vector with the corresponind normal for each vertex as defined above (imported_positions)
+    imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nBack+nUp)/3.0f );
+    imported_normals.push_back( (nLeft+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nFront+nDown)/3.0f ); imported_normals.push_back( (nLeft+nBack+nDown)/3.0f );
 
-imported_normals.push_back( (nRight+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
-imported_normals.push_back( (nRight+nFront+nDown)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+    imported_normals.push_back( (nRight+nFront+nUp)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
+    imported_normals.push_back( (nRight+nFront+nDown)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
 
-imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
-imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
+    imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+    imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
 
-imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f );
-imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f );
+    imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f );
+    imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f );
 
-imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
-imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
+    imported_normals.push_back( (nLeft+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nUp+nFront)/3.0f ); imported_normals.push_back( (nRight+nDown+nFront)/3.0f );
+    imported_normals.push_back( (nRight+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nDown+nFront)/3.0f ); imported_normals.push_back( (nLeft+nUp+nFront)/3.0f );
 
-imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
-imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f );
-
-
-
-/*** Supposedely Imported Attributes  END***/
-
-
-/*   Auto Addition of Values  Supposedely Imported START*/
-std::vector<glm::vec3> positions;
-//   positions.push_back(glm::vec3( 0.5, -0.5, 0.5));positions.push_back(glm::vec3( -0.5, -0.5, -0.5));positions.push_back(glm::vec3( 0.5, 0.5, 0.0));//get all position values
-for(unsigned i=0;i<imported_positions.size();i++)
-{
-    positions.push_back(glm::vec3(imported_positions[i]));
-}
-
-
-std::vector<glm::vec4> colours;
-//   colours.push_back(glm::vec4( 1,-0, 0, 1));colours.push_back(glm::vec4( 0, 1, 0, 1));colours.push_back(glm::vec4( 1,0, 1, 1));//get all colour values
-for(unsigned int i=0;i<imported_colours.size();i++)
-{
-    colours.push_back(glm::vec4(imported_colours[i]));
-}
-
-
-std::vector<glm::vec2> textures;
-for(unsigned int i=0;i<imported_texureUVs.size();i++)
-{
-    textures.push_back(glm::vec2(imported_texureUVs[i]));
-}
-
-
-std::vector<glm::vec3> normals;
-for(unsigned int i=0;i<imported_normals.size();i++)
-{
-    normals.push_back(glm::vec3(imported_normals[i]));
-}
-
-/*   Auto Addition of Values  Supposedely Imported END */
+    imported_normals.push_back( (nLeft+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nDown+nBack)/3.0f ); imported_normals.push_back( (nRight+nUp+nBack)/3.0f );
+    imported_normals.push_back( (nRight+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nUp+nBack)/3.0f ); imported_normals.push_back( (nLeft+nDown+nBack)/3.0f );
 
 
 
+    /*** Supposedely Imported Attributes  END***/
 
-/*  Structures to the VBO */
-if(positions.size()==colours.size())
-{
-    for(unsigned int i=0;i<positions.size();i++)//for all vertices imported
+
+    /*   Auto Addition of Values  Supposedely Imported START*/
+    std::vector<glm::vec3> positions;
+    //   positions.push_back(glm::vec3( 0.5, -0.5, 0.5));positions.push_back(glm::vec3( -0.5, -0.5, -0.5));positions.push_back(glm::vec3( 0.5, 0.5, 0.0));//get all position values
+    for(unsigned i=0;i<imported_positions.size();i++)
     {
-        vertices.push_back(VertexStructure(positions[i], colours[i], glm::vec2(0,0), normals[i], glm::vec3(0,0,0), glm::vec3(0,0,0)));//each time add a VertexStructure of the retreived position and colour value
-//           std::cout<<positions[i][1]<<","<<colours[i][1]<<std::endl;
+        positions.push_back(glm::vec3(imported_positions[i]));
     }
-}
 
 
-glGenBuffers(1, &vbo);
-glBindBuffer(GL_ARRAY_BUFFER, vbo);
-glBufferData(GL_ARRAY_BUFFER, sizeof(VertexStructure) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+    std::vector<glm::vec4> colours;
+    //   colours.push_back(glm::vec4( 1,-0, 0, 1));colours.push_back(glm::vec4( 0, 1, 0, 1));colours.push_back(glm::vec4( 1,0, 1, 1));//get all colour values
+    for(unsigned int i=0;i<imported_colours.size();i++)
+    {
+        colours.push_back(glm::vec4(imported_colours[i]));
+    }
 
-//addition of positions
 
-posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or '0' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(posAttrib);
-glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
+    std::vector<glm::vec2> textures;
+    for(unsigned int i=0;i<imported_texureUVs.size();i++)
+    {
+        textures.push_back(glm::vec2(imported_texureUVs[i]));
+    }
 
-//addition of colours
 
-colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or '1' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(colAttrib);
-glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)12);// 3 coordinate element vertices * 4 byte float each one
+    std::vector<glm::vec3> normals;
+    for(unsigned int i=0;i<imported_normals.size();i++)
+    {
+        normals.push_back(glm::vec3(imported_normals[i]));
+    }
 
-//addition of texture uvs
-
-texAttrib = glGetAttribLocation(m_shaderProgramId, "in_uv");//or '2' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(texAttrib);
-glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)28);// 4 coordinate element vertices * 4 byte float each one so.... 12 byte which is the current offset +..16 = 28
-                                                                                                                                                                              //bytes offset for the uvs
-//addition of normals
-
-normAttrib = glGetAttribLocation(m_shaderProgramId, "in_normal");//or '3' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(normAttrib);
-glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)36);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
-                                                                                                                                                                              //bytes offset for the normals
-//addition of bitangents
-
-bitanAttrib = glGetAttribLocation(m_shaderProgramId, "in_bitangent");//or '3' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(bitanAttrib);
-glVertexAttribPointer(bitanAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)48);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
-
-//addition of binormals
-
-binorAttrib = glGetAttribLocation(m_shaderProgramId, "in_binormal");//or '3' instead of retrieving the reference to the attribute "position input"
-glEnableVertexAttribArray(binorAttrib);
-glVertexAttribPointer(binorAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)60);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+    /*   Auto Addition of Values  Supposedely Imported END */
 
 
 
 
-Model myModel;                            //is allocated on Stack
-myModel.vao = vao;                        //add vao
-myModel.vbos.push_back(vbo);              //add vbo
-GameModelList[gameModelName] = myModel;  //add to std::map
+    /*  Structures to the VBO */
+    if(positions.size()==colours.size())
+    {
+        for(unsigned int i=0;i<positions.size();i++)//for all vertices imported
+        {
+            vertices.push_back(VertexStructure(positions[i], colours[i], glm::vec2(0,0), normals[i], glm::vec3(0,0,0), glm::vec3(0,0,0)));//each time add a VertexStructure of the retreived position and colour value
+    //           std::cout<<positions[i][1]<<","<<colours[i][1]<<std::endl;
+        }
+    }
+
+    cube2Vertices=positions.size();
+
+    glGenBuffers(1, &vbo);
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(VertexStructure) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+
+    //addition of positions
+
+    posAttrib = glGetAttribLocation(m_shaderProgramId, "in_position");//or '0' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
+
+    //addition of colours
+
+    colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or '1' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(colAttrib);
+    glVertexAttribPointer(colAttrib, 4, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)12);// 3 coordinate element vertices * 4 byte float each one
+
+    //addition of texture uvs
+
+    texAttrib = glGetAttribLocation(m_shaderProgramId, "in_uv");//or '2' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(texAttrib);
+    glVertexAttribPointer(texAttrib, 2, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)28);// 4 coordinate element vertices * 4 byte float each one so.... 12 byte which is the current offset +..16 = 28
+                                                                                                                                                                                  //bytes offset for the uvs
+    //addition of normals
+
+    normAttrib = glGetAttribLocation(m_shaderProgramId, "in_normal");//or '3' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(normAttrib);
+    glVertexAttribPointer(normAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)36);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+                                                                                                                                                                                  //bytes offset for the normals
+    //addition of bitangents
+
+    bitanAttrib = glGetAttribLocation(m_shaderProgramId, "in_bitangent");//or '3' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(bitanAttrib);
+    glVertexAttribPointer(bitanAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)48);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+
+    //addition of binormals
+
+    binorAttrib = glGetAttribLocation(m_shaderProgramId, "in_binormal");//or '3' instead of retrieving the reference to the attribute "position input"
+    glEnableVertexAttribArray(binorAttrib);
+    glVertexAttribPointer(binorAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)60);// 2 coordinate element vertices * 4 byte float each one so.... 8 byte which is the current offset +..8 = 36
+
+
+    Model myModel;                            //is allocated on Stack
+    myModel.vao = vao;                        //add vao
+    myModel.vbos.push_back(vbo);              //add vbo
+    GameModelList[gameModelName] = myModel;  //add to std::map
 
 }
 
@@ -541,7 +554,6 @@ void ModelLoader::createVBOgrid(const std::string & gameModelName )
         GLfloat y;
         GLfloat z;
     };
-
 
 
     std::vector<point> Vertices;
@@ -608,8 +620,6 @@ void ModelLoader::createVBOgrid(const std::string & gameModelName )
     myModel.vbos.push_back(vboID);              //add vbo
     GameModelList[gameModelName] = myModel;  //add to std::map
 
-
-
 }
 
 
@@ -634,16 +644,11 @@ unsigned int ModelLoader::GetModel(const std::string& gameModelName)
 
 
 
-
-
-
-
-
-
-
-
-void ModelLoader::CreateCubeModel(const std::string& gameModelName, ngl::VertexArrayObject *m_vaoMesh)
+void ModelLoader::CreateWarriorModel(const std::string& gameModelName)
 {
+   //make sure we clear for each model we load, to guaranteed vboMesh refers to each model loading everytime. in ex. vboMesh.size_t() should be different for Warrrior or Cube
+   vboMesh.clear();
+
    unsigned int vao;
    unsigned int vbo;
 
@@ -761,9 +766,6 @@ void ModelLoader::CreateCubeModel(const std::string& gameModelName, ngl::VertexA
              vboMesh.push_back(d);
          }
      }
-
-
-
 
 
    //Create a temporary vector and copy over the data loaded from vboMesh

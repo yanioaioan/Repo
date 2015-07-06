@@ -43,8 +43,9 @@ class ModelLoader : public Singleton<ModelLoader>
 //         ModelLoader(GLuint shaderProgramId);
 //        ~ModelLoader();
 
-     void CreateCubeModel(const std::string& gameModelName, ngl::VertexArrayObject *m_vaoMesh);
+     void CreateWarriorModel(const std::string& gameModelName);
      void CreateCubeModel2(const std::string& gameModelName);
+     void CreateCubeModel(const std::string& gameModelName);
      void CreateGrid(const std::string& gameModelName);
 
      void createVBOgrid(const std::string &gameModelName);
@@ -89,6 +90,7 @@ class ModelLoader : public Singleton<ModelLoader>
      GLuint m_shaderProgramId;
 
      std::vector <VertexStructure> vboMesh;
+     int cubeVertices, cube2Vertices;
 
   private:
     std::map<std::string, Model> GameModelList;//keep our models
