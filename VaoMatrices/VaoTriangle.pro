@@ -42,10 +42,11 @@ OTHER_FILES+= $$PWD/shaders/*
 
 OBJECTS_DIR=obj
 
-LIBS += -L/usr/local/lib -lSDL2 -L/path/to/glew/lib -lGLEW
-LIBS +=  -lGLU -lGL
+LIBS += -L/usr/local/lib -lSDL2 -L/usr/lib -lGLEW -L/usr/lib -lGL -L/usr/lib -lGLU
+
 
 
 LIBS += -L/$(HOME)/NGL/lib -l NGL
 INCLUDEPATH += $$(HOME)/NGL/include/
 INCLUDEPATH +=$$PWD/objloaderlib/objTester/objTester/
+CONFIG +=c++11

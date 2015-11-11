@@ -20,9 +20,9 @@ public:
     bool m_flagLocalX;
     bool m_flagLocalY;
     bool m_flagLocalZ;
-    int m_angleX;
-    int m_angleY;
-    int m_angleZ;
+    float m_angleX;
+    float m_angleY;
+    float m_angleZ;
 
 protected:
 

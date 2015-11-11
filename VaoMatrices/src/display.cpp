@@ -68,36 +68,36 @@ void Display::update()
 
         if(e.key.keysym.sym==SDLK_UP)
         {
-            m_angleX=1;
+            m_angleX=0.1;
             m_flagLocalX=true;
         }
         if(e.key.keysym.sym==SDLK_DOWN)
         {
-            m_angleX=-1;
+            m_angleX=-0.1;
             m_flagLocalX=true;
         }
 
 
         if(e.key.keysym.sym==SDLK_LEFT)
         {
-            m_angleY=-1;
+            m_angleY=-0.1;
             m_flagLocalY=true;
         }
         if(e.key.keysym.sym==SDLK_RIGHT)
         {
-            m_angleY=1;
+            m_angleY=0.1;
             m_flagLocalY=true;
         }
 
 
         if(e.key.keysym.sym==SDLK_a)
         {
-            m_angleZ=1;
+            m_angleZ=0.1;
             m_flagLocalZ=true;
         }
         if(e.key.keysym.sym==SDLK_s)
         {
-            m_angleZ=-1;
+            m_angleZ=-0.1;
             m_flagLocalZ=true;
         }
 

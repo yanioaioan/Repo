@@ -8,7 +8,7 @@ class Singleton
 {
 public:
 
-    static T* Singleton<T>::instance(int shaderProgramId)
+    static T* /*Singleton<T>::*/instance(int shaderProgramId)
     {
         //force thread safety
         QMutex m;

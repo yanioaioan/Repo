@@ -508,16 +508,16 @@ void ModelLoader::CreateGrid(const std::string& gameModelName)
         GLfloat z;
     };
 
-    point vertices[50][50];
+    point vertices[50][50][4];
 
     for(int i = 0; i < 50; i++)
     {
         for(int j = 0; j < 50; j++)
-            {
-                vertices[i][j].x = -5+j/2;
-                vertices[i][j].y = 0;
-                vertices[i][j].z = i/2.0;
-            }
+        {
+            vertices[i][j].x = -5+j/2;
+            vertices[i][j].y = 0;
+            vertices[i][j].z = i/2.0;
+        }
     }
 
 

@@ -220,8 +220,8 @@ void renderScene(void)
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
     glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,50,-250),
-                              glm::vec3(Model[3][0], Model[3][1]+1, Model[3][2]), // and looks at the origin
+                              glm::vec3(0,2,-5),
+                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
                               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                               );
 
@@ -398,10 +398,10 @@ void renderScene(void)
 //     glEnd();
 
     m_Frames++;
+    std::cout<<"m_Frames="<<m_Frames<<std::endl;
 
     gLight.position.z=-10+2*10/6*cos(m_Frames*M_PI/180);
-     gLight.position.x=-1+2/6*cos(m_Frames*M_PI/180);
-
+    gLight.position.x=-1+2/6*cos(m_Frames*M_PI/180);
 
 }
 
@@ -592,8 +592,13 @@ int main(/*int argc, char **argv*/)
         printf("Time elapsed per frame is %f ms\n", tmpTime / float(m_Frames));
         printf("FPS is %f frames per/sec \n", float(m_Frames)/(float(tmpTime) / 1000.0f) );
 
+
+        currentTime.restart ();
+//        m_Frames=0;
+
         //SwapBuffers
         display.update();
+
     }
 
 // m->DeleteModel("cube1");m->DeleteModel("cube2");m->DeleteModel("grid"); No need to be called since the ModelLoader destructor takes care of the clean up process
