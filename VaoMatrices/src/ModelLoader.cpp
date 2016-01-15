@@ -501,14 +501,14 @@ void ModelLoader::CreateCubeModel2(const std::string& gameModelName)
 
 void ModelLoader::CreateGrid(const std::string& gameModelName)
 {
-    struct point
+     struct point
     {
         GLfloat x;
         GLfloat y;
         GLfloat z;
     };
 
-    point vertices[50][50][4];
+    point vertices[50][50];
 
     for(int i = 0; i < 50; i++)
     {
@@ -548,7 +548,7 @@ void ModelLoader::createVBOgrid(const std::string & gameModelName )
 
     glGetError();
 
-    struct point
+     struct point
     {
         GLfloat x;
         GLfloat y;

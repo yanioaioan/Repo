@@ -14,7 +14,7 @@ CC            = clang
 CXX           = clang++
 DEFINES       = -DQT_OPENGL_LIB -DQT_WIDGETS_LIB -DQT_GUI_LIB -DQT_CORE_LIB
 CFLAGS        = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
-CXXFLAGS      = -pipe -g -Wall -W -D_REENTRANT -fPIC $(DEFINES)
+CXXFLAGS      = -pipe -g -std=c++11 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -Iinclude -I../../../../NGL/include -Iobjloaderlib/objTester/objTester -I/opt/qt/5.5/gcc_64/include -I/opt/qt/5.5/gcc_64/include/QtOpenGL -I/opt/qt/5.5/gcc_64/include/QtWidgets -I/opt/qt/5.5/gcc_64/include/QtGui -I/opt/qt/5.5/gcc_64/include/QtCore -Imoc -I/opt/qt/5.5/gcc_64/mkspecs/linux-clang
 QMAKE         = /opt/qt/5.5/gcc_64/bin/qmake
 DEL_FILE      = rm -f
@@ -235,6 +235,7 @@ Makefile: VaoTriangle.pro ../../../../.qmake.cache /opt/qt/5.5/gcc_64/mkspecs/li
 		/opt/qt/5.5/gcc_64/mkspecs/features/default_pre.prf \
 		/opt/qt/5.5/gcc_64/mkspecs/features/resolve_config.prf \
 		/opt/qt/5.5/gcc_64/mkspecs/features/default_post.prf \
+		/opt/qt/5.5/gcc_64/mkspecs/features/c++11.prf \
 		/opt/qt/5.5/gcc_64/mkspecs/features/warn_on.prf \
 		/opt/qt/5.5/gcc_64/mkspecs/features/qt.prf \
 		/opt/qt/5.5/gcc_64/mkspecs/features/resources.prf \
@@ -371,6 +372,7 @@ Makefile: VaoTriangle.pro ../../../../.qmake.cache /opt/qt/5.5/gcc_64/mkspecs/li
 /opt/qt/5.5/gcc_64/mkspecs/features/default_pre.prf:
 /opt/qt/5.5/gcc_64/mkspecs/features/resolve_config.prf:
 /opt/qt/5.5/gcc_64/mkspecs/features/default_post.prf:
+/opt/qt/5.5/gcc_64/mkspecs/features/c++11.prf:
 /opt/qt/5.5/gcc_64/mkspecs/features/warn_on.prf:
 /opt/qt/5.5/gcc_64/mkspecs/features/qt.prf:
 /opt/qt/5.5/gcc_64/mkspecs/features/resources.prf:
@@ -732,6 +734,7 @@ obj/ModelLoader.o: src/ModelLoader.cpp include/ModelLoader.h \
 		/opt/qt/5.5/gcc_64/include/QtGui/qsurfaceformat.h \
 		../../../../NGL/include/ngl/Obj.h \
 		../../../../NGL/include/ngl/Texture.h \
+		../../../../NGL/include/ngl/Image.h \
 		../../../../NGL/include/ngl/Colour.h \
 		../../../../NGL/include/ngl/Vec4.h \
 		../../../../NGL/include/ngl/Vec2.h \

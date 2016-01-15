@@ -54,7 +54,42 @@ Light gLight;
 
 Display display(ScreenWidth,ScreenHeight,"Vao Model Loading & Modern Opengl (Matrices Shaders)- (using SDL for window & opengl context handling)");
 
-//static float angle;
+
+
+//FPS camera, right-handed coordinate system.
+
+// Pitch should be in the range of [-90 ... 90] degrees and yaw
+// should be in the range of [0 ... 360] degrees.
+glm::mat4 FPSViewRH( glm::vec3 eye, float pitch, float yaw )
+{
+    if(pitch>2*M_PI || yaw>2*M_PI)//in which case we 've entered degrees
+    {
+        pitch=pitch*(M_PI/180.0);
+        yaw=yaw*(M_PI/180.0);
+    }
+
+    // If the pitch and yaw angles are in degrees,
+    // they need to be converted to radians. Here
+    // I assume the values are already converted to radians.
+    float cosPitch = cos(pitch);
+    float sinPitch = sin(pitch);
+    float cosYaw = cos(yaw);
+    float sinYaw = sin(yaw);
+
+    glm::vec3 xaxis = { cosYaw, 0, -sinYaw };
+    glm::vec3 yaxis = { sinYaw * sinPitch, cosPitch, cosYaw * sinPitch };
+    glm::vec3 zaxis = { sinYaw * cosPitch, -sinPitch, cosPitch * cosYaw };
+
+    // Create a 4x4 view matrix from the right, up, forward and eye position vectors
+    glm::mat4 viewMatrix = {
+        glm::vec4(       xaxis.x,            yaxis.x,            zaxis.x,      0 ),
+        glm::vec4(       xaxis.y,            yaxis.y,            zaxis.y,      0 ),
+        glm::vec4(       xaxis.z,            yaxis.z,            zaxis.z,      0 ),
+        glm::vec4( -dot( xaxis, eye ), -dot( yaxis, eye ), -dot( zaxis, eye ), 1 )
+    };
+
+    return viewMatrix;
+}
 
 enum rotationAxisFlag
 {
@@ -171,7 +206,7 @@ void renderScene(void)
     glm::mat4 Projection = glm::perspective(glm::radians(45.0f), ScreenWidth / (float)ScreenHeight, 0.5f, 500.f);
 
 //  Camera matrix
-    glm::vec3 newcameraposition(Model2[3][0], Model2[3][1], Model2[3][2]);
+    glm::vec3 newcameraposition(Model2[3][0], Model2[3][1], Model2[3][2]-2);
     glm::vec3 target(Model[3][0], Model[3][1], Model[3][2]);
     glm::vec3 cameraDirection = target-newcameraposition;
     glm::normalize(cameraDirection);
@@ -198,32 +233,71 @@ void renderScene(void)
 
     //1)Camera Supporting Roll (around Z axis)
 
-    // Recompute Up Vector -  Supporting Roll (around Z axis)
+//     Recompute Up Vector -  Supporting Roll (around Z axis)
 //    glm::mat4 View = glm::lookAt(
-//                              glm::vec3(Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400/*0,0,-450*/),
-//                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
+//                              glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]),
+//                              glm::vec3(Model[3][0], Model[3][1], Model[3][2]), // and looks at the origin
 //                              glm::vec3(newUp) /*glm::vec3(0,1,0)*/  // Head is up (set to 0,-1,0 to look upside-down)
 //                              );
+
+//    glm::mat4 View=FPSViewRH(-newcameraposition,-40,0);
 
 
     // 2) Standar Up Vector - Not Supporting Roll (around Z axis)
 
-    // Standar Up Vector - Not Supporting Roll (around Z axis) - Camera Tracking the player object
-//    glm::mat4 View = glm::lookAt(
-//                              glm::vec3(/*0,0,-450*/Model2[3][0]*400, Model2[3][1]*400, Model2[3][2]*400),
-//                              glm::vec3(Model[3][0]*200, Model[3][1]*200, Model[3][2]*200), // and looks at the origin
-//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                              );
+//     Standar Up Vector - Not Supporting Roll (around Z axis) - Camera Tracking the player object 3rd person
+    glm::mat4 View = glm::lookAt(
+                              glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]),
+                              glm::vec3(Model[3][0], Model[3][1], Model[3][2]), // and looks at the origin
+                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                              );
 
 
     // 3) Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
-    glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,2,-5),
-                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
-                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                              );
+//    glm::mat4 View = glm::lookAt(
+//                              glm::vec3(0,2,-5),
+//                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
+//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+//                              );
+
+
+
+
+    // 4) 3rd person Tracking manual calculate of camera's new position
+
+//    //Spherical coordinates
+//    float x=Model2[3][0];//white cube's position
+//    float y=Model2[3][1];
+//    float z=Model2[3][2];
+
+//    float r=sqrt(x*x + y*y + z*z);
+//    float theta=atan2(y,x);
+//    float phi=acos(z/r);
+
+//    //Convert to Cartesian Coordinataes for camera position
+//    float scaleValue=10;
+
+//    //camera's position
+//    float cartesCamX = scaleValue*r*cos(theta)*sin(phi);
+//    float cartesCamY = scaleValue*r*sin(theta)*sin(phi);
+//    float cartesCamZ = scaleValue*r*cos(phi);
+
+//    // Normalize your look vector
+//    glm::vec3 lookVector=glm::vec3(Model[3][0]-Model2[3][0], Model[3][1]-Model2[3][1], Model[3][2]-Model2[3][2]);
+//    glm::normalize(lookVector);
+
+//    //Take the cross product of your look vector and a vector of 0,1,0. This gives you your right vector.
+//    glm::vec3 rightVector=glm::cross(lookVector, glm::vec3(0,1,0));
+
+//    //Take the cross product of your right vector and your look vector. This is your new up vector, which is a perpendicular to your original look vector.
+//    glm::vec3 newUpVector=glm::cross(rightVector, lookVector);
+//    std::cout<<newUpVector.x<<","<<newUpVector.y<<","<<newUpVector.z<<std::endl;
+
+//    glm::mat4 View = glm::lookAt(glm::vec3(cartesCamX,cartesCamY,cartesCamZ), glm::vec3(Model[3][0], Model[3][1], Model[3][2]),  newUpVector);
+
+
 
 
     //  HERE I SCALED CAUSE THE TESTING MODEL WAS BIG & translated it the be centered to the screen
@@ -589,12 +663,13 @@ int main(/*int argc, char **argv*/)
 
         // Calculate TimeElapsed & FPS
         double tmpTime=currentTime.elapsed();
+
         printf("Time elapsed per frame is %f ms\n", tmpTime / float(m_Frames));
         printf("FPS is %f frames per/sec \n", float(m_Frames)/(float(tmpTime) / 1000.0f) );
 
 
         currentTime.restart ();
-//        m_Frames=0;
+        m_Frames=0;
 
         //SwapBuffers
         display.update();
