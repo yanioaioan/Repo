@@ -89,6 +89,7 @@ glm::mat4 FPSViewRH( glm::vec3 eye, float pitch, float yaw )
     };
 
     return viewMatrix;
+
 }
 
 enum rotationAxisFlag
@@ -136,7 +137,6 @@ void renderScene(void)
 
   float angle = 0;
 
-
   if(display.m_flagLocalX)
   {
       angle = display.m_angleX;
@@ -146,12 +146,13 @@ void renderScene(void)
 
       translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
 
-
   }
 
   if(display.m_flagLocalY)
   {
      angle = display.m_angleY;
+
+     std::cout<<angle <<std::endl;
 
      rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
      translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
@@ -246,21 +247,21 @@ void renderScene(void)
     // 2) Standar Up Vector - Not Supporting Roll (around Z axis)
 
 //     Standar Up Vector - Not Supporting Roll (around Z axis) - Camera Tracking the player object 3rd person
-    glm::mat4 View = glm::lookAt(
-                              glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]),
-                              glm::vec3(Model[3][0], Model[3][1], Model[3][2]), // and looks at the origin
-                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-                              );
+//    glm::mat4 View = glm::lookAt(
+//                              glm::vec3(Model2[3][0], Model2[3][1], Model2[3][2]),
+//                              glm::vec3(Model[3][0], Model[3][1], Model[3][2]), // and looks at the origin
+//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+//                              );
 
 
     // 3) Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
-//    glm::mat4 View = glm::lookAt(
-//                              glm::vec3(0,2,-5),
-//                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
-//                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
-//                              );
+    glm::mat4 View = glm::lookAt(
+                              glm::vec3(0,2,-5),
+                              glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
+                              glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
+                              );
 
 
 
@@ -472,7 +473,7 @@ void renderScene(void)
 //     glEnd();
 
     m_Frames++;
-    std::cout<<"m_Frames="<<m_Frames<<std::endl;
+//    std::cout<<"m_Frames="<<m_Frames<<std::endl;
 
     gLight.position.z=-10+2*10/6*cos(m_Frames*M_PI/180);
     gLight.position.x=-1+2/6*cos(m_Frames*M_PI/180);
@@ -664,8 +665,8 @@ int main(/*int argc, char **argv*/)
         // Calculate TimeElapsed & FPS
         double tmpTime=currentTime.elapsed();
 
-        printf("Time elapsed per frame is %f ms\n", tmpTime / float(m_Frames));
-        printf("FPS is %f frames per/sec \n", float(m_Frames)/(float(tmpTime) / 1000.0f) );
+//        printf("Time elapsed per frame is %f ms\n", tmpTime / float(m_Frames));
+//        printf("FPS is %f frames per/sec \n", float(m_Frames)/(float(tmpTime) / 1000.0f) );
 
 
         currentTime.restart ();

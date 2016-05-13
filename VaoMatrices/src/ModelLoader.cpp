@@ -460,6 +460,8 @@ void ModelLoader::CreateCubeModel2(const std::string& gameModelName)
     glEnableVertexAttribArray(posAttrib);
     glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
 
+glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, sizeof(VertexStructure), (void*)0);
+
     //addition of colours
 
     colAttrib = glGetAttribLocation(m_shaderProgramId, "in_color");//or '1' instead of retrieving the reference to the attribute "position input"
