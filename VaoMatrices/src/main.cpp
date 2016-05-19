@@ -18,7 +18,7 @@
 
 
 //usefull vec3 print command
-#define printVec3(a,b,c) std::cout<<a<<","<<b<<","<<c<<std::endl;
+#define printVec3(a,b,c) //std::cout<<a<<","<<b<<","<<c<<std::endl;
 
 glm::mat4 matrixFromAxisAngle(glm::vec3 axis, float angle);
 void loadTexture(const char *texturePath);
@@ -41,6 +41,63 @@ int m_Frames = 0;
 ////v = ( sn*t.x+ cs*v.x,sn*t.y+ cs.v.y,sn*t.z+ cs.v.z );
 ////setModelViewMatrix( );
 //}
+
+
+#include <iomanip>
+float * getEulerAngles(const glm::mat4 & rotationMatrix)
+{
+
+    double dArray[16] = {0.0};
+
+   // //std::cout<<std::endl;//std::cout<<std::endl;//std::cout<<std::endl;
+    const float *pSource = (const float*)glm::value_ptr(rotationMatrix);
+    for (int i = 0; i < 16; ++i)
+    {
+
+        if(i%4==0)//every row
+            //std::cout<<std::endl;
+
+        dArray[i] = pSource[i];
+
+//            if( dArray[i] < (1/pow(10,20)) )
+//            {
+//                //std::cout<<setw(10)<<0<<"\t";
+//            }
+//            else
+        {
+//            //std::cout<<setw(10)<<dArray[i]<<"\t";
+        }
+
+
+    }////std::cout<<std::endl;//std::cout<<std::endl;//std::cout<<std::endl;
+
+
+
+    float bank;
+    float heading;
+    float attitude;
+    //extract euler angles from rotation mat
+
+    if(dArray[5]!=1 || dArray[5]!=-1) //if we are not in the south or north pole
+    {
+         bank = atan2(-dArray[6],dArray[5]);
+         heading = atan2(-dArray[8],dArray[0]);
+         attitude = asin(-dArray[4]);
+    }
+     else
+    {
+        bank = 0;
+        heading = atan2(dArray[3],dArray[10]);
+        attitude = asin(-dArray[4]);
+    }
+//    //std::cout<<bank*(180.0f/M_PI)<<endl<<heading*(180.0f/M_PI)<<endl<<attitude*(180.0f/M_PI)<<std::endl;
+
+    float eulerangles[3];
+    eulerangles[0]=bank*(180.0f/M_PI);eulerangles[1]=heading*(180.0f/M_PI);eulerangles[2]=attitude*(180.0f/M_PI);
+    return eulerangles;
+
+}
+
 
 
 struct Light {
@@ -92,6 +149,9 @@ glm::mat4 FPSViewRH( glm::vec3 eye, float pitch, float yaw )
 
 }
 
+#include <iomanip>
+
+
 enum rotationAxisFlag
 {
     y,
@@ -103,8 +163,10 @@ rotationAxisFlag=y;
 glm::mat4 Model = glm::mat4(1);
 glm::mat4 Model2 = glm::mat4(1);
 
-glm::mat4 translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0,0,0));//glm::mat4(1);
-glm::mat4 translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//glm::mat4(1);
+glm::mat4 translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0,1,2));//glm::mat4(1);
+glm::mat4 translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,1,2));//glm::mat4(1);
+
+glm::mat4 translationMatrix3 = glm::translate(glm::mat4(1), glm::vec3(0,0,0));//glm::mat4(1);
 
 glm::mat4 rotationMatrix = glm::mat4(1);
 glm::mat4 scaleMatrix = glm::scale(glm::mat4(1), glm::vec3(1,1,1));
@@ -116,8 +178,14 @@ glm::mat4 scaleMatrix2 = glm::scale(glm::mat4(1), glm::vec3(0.5,0.5,0.5));
 
 glm::vec4 newUp(0,1,0,0);
 
+static float x_rot;
+static float y_rot;
 static float z_rot;
 
+static float localWhiteCubeRot;
+
+glm::mat4 pushTo;
+glm::mat4 rot;
 
 void renderScene(void)
 {
@@ -137,27 +205,59 @@ void renderScene(void)
 
   float angle = 0;
 
+
   if(display.m_flagLocalX)
   {
       angle = display.m_angleX;
 
       rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(1,0,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
-      translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
+//      translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,2));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
 
-      translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
+     // translationMatrix2 = glm::translate(translationMatrix, glm::vec3(0,0,-2));//Used to form another Model matrix rotating around the main colored Cube
 
+
+
+      //for the cube rotation around the warrior
+      //first we need to extract the euler angles from the rotation matrix (cause the angle gets zeroed-out every time, and it's only the rotation matrix that gets updated..no reason why)
+
+//      float * eulerangles = getEulerAngles(rotationMatrix);
+//      eulerangles[0];//bank
+//      eulerangles[1];//heading
+//      eulerangles[2];//attitude
+
+
+      x_rot+=angle;
+
+//      translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,-1,-2));
+      rot= glm::rotate(translationMatrix, x_rot, glm::vec3(1,0,0)); //rotationMatrix*translationMatrix;
+      glm::mat4 localrotationofWhiteCube=glm::rotate(rot, localWhiteCubeRot++/180.0f , glm::vec3(0,1,0));
+      pushTo = glm::translate(rot,glm::vec3(0,1,2)) * localrotationofWhiteCube;
+//      translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,1,2));
   }
 
   if(display.m_flagLocalY)
   {
      angle = display.m_angleY;
 
-     std::cout<<angle <<std::endl;
+     //std::cout<<angle <<std::endl;
 
      rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,1,0));//the rotation matrix is multiplied with itself producing a local coordinate rotation
-     translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
+//     translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,2));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
 
-     translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
+    // translationMatrix2 = glm::translate(translationMatrix, glm::vec3(0,0,-2));//Used to form another Model matrix rotating around the main colored Cube
+
+
+
+     //for the cube rotation around the warrior
+     y_rot +=angle;
+
+     std::cout<<y_rot<<std::endl;
+
+//     translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,-1,-2));
+     rot= glm::rotate(translationMatrix, y_rot , glm::vec3(0,1,0));
+     glm::mat4 localrotationofWhiteCube=glm::rotate(rot, localWhiteCubeRot++/180.0f , glm::vec3(0,1,0));
+     pushTo = glm::translate(rot,glm::vec3(0,1,2)) * localrotationofWhiteCube;
+//     translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,1,2));
 
   }
 
@@ -166,12 +266,23 @@ void renderScene(void)
     angle = display.m_angleZ;
 
     rotationMatrix = glm::rotate(/*glm::mat4(1) */ /*Model*/ rotationMatrix, angle, glm::vec3(0,0,1));//the rotation matrix is multiplied with itself producing a local coordinate rotation
-    translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,0));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
+//    translationMatrix = glm::translate(glm::mat4(1)/*translationMatrix*/,glm::vec3(0,0,2));//this represents our global translation when reinitialized with glm::mat4(1) / or our local translation if multiplied with translation matrix itself from the previous iteration
 
-    translationMatrix2 = glm::translate(glm::mat4(1), glm::vec3(0,0,-1));//Used to form another Model matrix rotating around the main colored Cube
+    //translationMatrix2 = glm::translate(translationMatrix, glm::vec3(0,0,-2));//Used to form another Model matrix rotating around the main colored Cube
 
     // Roll section
     z_rot+=angle;
+
+
+    //for the cube rotation around the warrior
+//    translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,-1,-2));
+    rot= glm::rotate(translationMatrix, z_rot, glm::vec3(0,0,1)); //rotationMatrix*translationMatrix;
+    glm::mat4 localrotationofWhiteCube=glm::rotate(rot, localWhiteCubeRot++/180.0f , glm::vec3(0,1,0));
+    pushTo = glm::translate(rot,glm::vec3(0,1,2)) * localrotationofWhiteCube;
+//    translationMatrix = glm::translate(glm::mat4(1),glm::vec3(0,1,2));
+
+
+
   }
 
     //  translationMatrix = glm::translate(glm::mat4(1), glm::vec3(0.5,0,0));//glm::mat4(1);
@@ -188,10 +299,63 @@ void renderScene(void)
 //      Model =  rotationMatrix * translationMatrix * scaleMatrix;
 
 
-        //glm::mat4 rotationMatrix2 = glm::rotate(rotationMatrix, 45.0f ,glm::vec3(1,0,0));
+        //glm::mat4 rotationMatrix2 = glm::rotate(rotationMatrix2, localWhiteCubeRot++/360.0f ,glm::vec3(1,0,0));
+        //rotationMatrix = rotationMatrix2 * rotationMatrix2;
+
+        //move the cube up and front relative to the model //Works fine if no offset from origin
+//        translationMatrix2 = glm::translate(translationMatrix , glm::vec3(0,1,2));
+//        glm::mat4 localCubeRotationMat = glm::rotate(glm::mat4(1) ,  localWhiteCubeRot++/180.0f , glm::vec3(1,1,1));
+//        Model2 =  rotationMatrix* translationMatrix2*localCubeRotationMat *scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
+
+//        translationMatrix2 = glm::translate(translationMatrix , glm::vec3(0,0,-2));
+//        translationMatrix2 = glm::rotate(translationMatrix2 ,  /*localWhiteCubeRot++/180.0f*/45.0f , glm::vec3(1,1,1));
+//        translationMatrix2 = glm::translate(translationMatrix2 , glm::vec3(0,0,2));
 
 
-        Model2 =  rotationMatrix*translationMatrix2*scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
+        Model2 =  /*rotationMatrix* translationMatrix2*/pushTo *scaleMatrix2;//Flipped rotationMatrix with translationMatrix to achieve rotation around a single point
+
+
+
+
+//        //std::cout<<rotationMatrix[0][0]<<std::endl;//0row 0column
+//        //std::cout<<rotationMatrix[0][1]<<std::endl;//0row 1column
+//        //std::cout<<rotationMatrix[0][2]<<std::endl;//0row 2column
+//        //std::cout<<rotationMatrix[0][3]<<std::endl;//0row 3column
+        double dArray[16] = {0.0};
+
+       // //std::cout<<std::endl;//std::cout<<std::endl;//std::cout<<std::endl;
+        const float *pSource = (const float*)glm::value_ptr(rotationMatrix);
+        for (int i = 0; i < 16; ++i)
+        {
+
+            if(i%4==0)//every row
+                //std::cout<<std::endl;
+
+            dArray[i] = pSource[i];
+
+//            if( dArray[i] < (1/pow(10,20)) )
+//            {
+//                //std::cout<<setw(10)<<0<<"\t";
+//            }
+//            else
+            {
+//                //std::cout<<setw(10)<<dArray[i]<<"\t";
+            }
+
+
+        }////std::cout<<std::endl;//std::cout<<std::endl;//std::cout<<std::endl;
+
+
+
+
+//        m00	m01	m02	m03
+//        m10	m11	m12	m13
+//        m20	m21	m22	m23
+//        m30	m31	m32	m3
+
+//        bank = atan2(-m12,m11)
+//        heading = atan2(-m20,m00)
+//        attitude = asin(m10)
 
 
 //   Pre- or post-multiplication just defines the order of operations how the member of that matrix and vector are multiplied, its purely a notational convention.
@@ -258,7 +422,7 @@ void renderScene(void)
 
     // Standar Up Vector - Not Supporting Roll (around Z axis)- Camera Statically Placed - NOT Tracking the player object
     glm::mat4 View = glm::lookAt(
-                              glm::vec3(0,2,-5),
+                              glm::vec3(0,10,-8),
                               glm::vec3(Model[3][0], Model[3][1]+2, Model[3][2]), // and looks at the origin
                               glm::vec3(0,1,0)  // Head is up (set to 0,-1,0 to look upside-down)
                               );
@@ -294,7 +458,7 @@ void renderScene(void)
 
 //    //Take the cross product of your right vector and your look vector. This is your new up vector, which is a perpendicular to your original look vector.
 //    glm::vec3 newUpVector=glm::cross(rightVector, lookVector);
-//    std::cout<<newUpVector.x<<","<<newUpVector.y<<","<<newUpVector.z<<std::endl;
+//    //std::cout<<newUpVector.x<<","<<newUpVector.y<<","<<newUpVector.z<<std::endl;
 
 //    glm::mat4 View = glm::lookAt(glm::vec3(cartesCamX,cartesCamY,cartesCamZ), glm::vec3(Model[3][0], Model[3][1], Model[3][2]),  newUpVector);
 
@@ -400,12 +564,34 @@ void renderScene(void)
     // For each model you render, since the MVP will be different (at least the M part)
     glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2[0][0]);
 
-    // Pass model matrix of 2nd cube to shader for lighting calculations (However this could also happen here in c++ code as well for performance reasons)
-    modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
-    glUniformMatrix4fv(modelmatrixPassToShader, 1, GL_FALSE, &Model2[0][0]);
-
     glDrawArrays(GL_TRIANGLES, 0, m->cube2Vertices);//cube made of 36 vertices (1 cube = 6 planes * 2 triangles each plane * 3 vertices each triangle = 36 vertices passed onto the shader)
     glBindVertexArray(0);
+
+
+//    //glm::mat4 rotationMatrixLocalRotCubeWhite = glm::mat4(1);
+//    glm::mat4 Model2Local = glm::mat4(1);
+//    Model2 =  translationMatrix2*rotationMatrix*scaleMatrix2;
+//    Model2Local= glm::rotate( Model2, 45.0f, glm::vec3(0,1,0));
+
+//    glm::mat4 MVP2local   = Projection * View * Model2Local;
+
+
+//    glBindVertexArray(m->GetModel("cube2"));
+//    glGetUniformLocation(program, "MVP");
+
+//    // Send our transformation to the currently bound shader,
+//    // in the "MVP" uniform
+//    // For each model you render, since the MVP will be different (at least the M part)
+//    glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP2local[0][0]);
+
+//    // Pass model matrix of 2nd cube to shader for lighting calculations (However this could also happen here in c++ code as well for performance reasons)
+//    modelmatrixPassToShader = glGetUniformLocation(m->m_shaderProgramId, "modelmatrixcube");//or 'zero' instead of retrieving the reference to the attribute "position input"
+//    glUniformMatrix4fv(modelmatrixPassToShader, 1, GL_FALSE, &Model2Local[0][0]);
+
+//    glDrawArrays(GL_TRIANGLES, 0, m->cube2Vertices);//cube made of 36 vertices (1 cube = 6 planes * 2 triangles each plane * 3 vertices each triangle = 36 vertices passed onto the shader)
+//    glBindVertexArray(0);
+
+
 
     //unbind Texture
 //    unLoadTexture();
@@ -473,7 +659,7 @@ void renderScene(void)
 //     glEnd();
 
     m_Frames++;
-//    std::cout<<"m_Frames="<<m_Frames<<std::endl;
+//    //std::cout<<"m_Frames="<<m_Frames<<std::endl;
 
     gLight.position.z=-10+2*10/6*cos(m_Frames*M_PI/180);
     gLight.position.x=-1+2/6*cos(m_Frames*M_PI/180);
@@ -505,6 +691,7 @@ void Init()
 
 
 //    m->CreateCubeModel("cube1");
+    m->CreateCubeModel2("cube2");
     m->CreateWarriorModel("Warrior");
 
     loadTexture("textures/Imrod_Diffuse.tga");
@@ -516,7 +703,7 @@ void Init()
     // {
     //   char tmpbuf [50];
     //   sprintf(tmpbuf, "cube%d",i);
-         m->CreateCubeModel2(/*tmpbuf*/"cube2");
+//         m->CreateCubeModel2(/*tmpbuf*/"cube2");
     // }
 
 
@@ -532,6 +719,9 @@ void Init()
     glEnable(GL_DEPTH_CLAMP);
     glEnable( GL_MULTISAMPLE );
 
+    glHint(GL_POLYGON_SMOOTH, GL_NICEST);
+    glEnable(GL_POLYGON_SMOOTH);
+
 //    Matrices Initial Setup
     glm::mat4 Projection = glm::perspective(glm::radians(60.0f), ScreenWidth / (float)ScreenHeight, 0.5f, 150.f);
     //  Pass in the projection matrix to our model so we can pass it to the vertex shader
@@ -545,7 +735,6 @@ void Init()
                                 );
 
     m->SetViewMatrix(View);
-
 }
 
 
@@ -623,7 +812,7 @@ void loadTexture(const char* texturePath)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-            std::cout<<"texture GL set "<<texturePath<<"\n";
+            //std::cout<<"texture GL set "<<texturePath<<"\n";
             glGenerateMipmap(GL_TEXTURE_2D); //  Allocate the mipmaps
         }
         else// generate mipmaps for the 2nd texture
@@ -636,7 +825,7 @@ void loadTexture(const char* texturePath)
             glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
             glTexImage2D(GL_TEXTURE_2D,0,GL_RGB,width,height,0,GL_RGB,GL_UNSIGNED_BYTE,data);
-          std::cout<<"texture GL set "<<texturePath<<"\n";
+          //std::cout<<"texture GL set "<<texturePath<<"\n";
             glGenerateMipmap(GL_TEXTURE_2D); //  Allocate the mipmaps
         }
 
